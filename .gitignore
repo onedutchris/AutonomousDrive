@@ -1,0 +1,10 @@
+
+common.mk
+
+firmware/cortex.ld
+
+firmware/libccos.a
+
+firmware/STM32F10x.ld
+
+firmware/uniflash.jar
