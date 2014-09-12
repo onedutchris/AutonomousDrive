@@ -62,11 +62,15 @@ void operatorControl() {
 		motorSet(ARM_MOTOR_PORT,-joystickGetAnalog(1,2));
 		motorSet(CLAW_MOTOR_PORT,joystickGetAnalog(1,1));
 
+		printf("Left Sonar: %d\n",ultrasonicGet(leftSonar));
+		printf("Right Sonar: %d\n\n",ultrasonicGet(rightSonar));
+
 		//enable autonomous for testing
 		if (joystickGetDigital(1,6,'u') == 1) {
+
 			autonomous();
 		}
-		delay(20);
+		delay(50);
 	}
 }
 

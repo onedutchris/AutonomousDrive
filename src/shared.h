@@ -13,8 +13,8 @@
 #define ARM_MOTOR_PORT 7
 #define CLAW_MOTOR_PORT 6
 
-#define LEFT_SONAR_PORT 5
-#define RIGHT_SONAR_PORT 7
+#define LEFT_SONAR_PORT 8
+#define RIGHT_SONAR_PORT 5
 #define GYRO_PORT 2
 
 

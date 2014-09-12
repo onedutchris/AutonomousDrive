@@ -40,9 +40,17 @@ extern Ultrasonic leftSonar;
 extern Ultrasonic rightSonar;
 extern Gyro gyro;
 
+int TURN_DISTANCE = 35;
+int BACKUP_DISTANCE = 10;
+
+int leftSonarValue;
+int rightSonarValue;
+
+int leftMotorValue;
+int rightMotorValue;
+
 typedef enum {
-	SEARCHING,
-	DEPOSITING
+	SEARCHING, DEPOSITING
 } STATE;
 
 STATE currentState;
@@ -62,17 +70,60 @@ STATE currentState;
  */
 
 void autonomous() {
+	leftMotorValue = 0;
+	rightMotorValue = 0;
+
 	sense();
+	update();
 }
 
-void turn(int speed) {
+void turn(int speed, int direction) {
+	leftMotorValue =  direction * speed;
+	rightMotorValue =  direction * speed;
+}
 
+void move(int speed, int direction) {
+	leftMotorValue =  direction * speed;
+	rightMotorValue =  -direction * speed;
+}
+
+void update() {
+	if (leftSonarValue > rightSonarValue) {
+		if (rightSonarValue != 0) {
+			if (rightSonarValue <= BACKUP_DISTANCE) {
+				move(50, -1);
+			} else if (rightSonarValue <= TURN_DISTANCE) {
+				turn(50, -1);
+			} else {
+				move(50, 1);
+			}
+		} else {
+			move(50, 1);
+		}
+	} else if (leftSonarValue < rightSonarValue) {
+		if (leftSonarValue != 0) {
+			if (leftSonarValue <= BACKUP_DISTANCE) {
+				move(50, -1);
+			} else if (leftSonarValue <= TURN_DISTANCE) {
+				turn(50, 1);
+			} else {
+				move(50, 1);
+			}
+		} else {
+			move(50, 1);
+		}
+
+	}
+	setMotors();
 }
 
 void sense() {
-
+	leftSonarValue = ultrasonicGet(leftSonar);
+	rightSonarValue = ultrasonicGet(rightSonar);
 }
 
-void move() {
-
+void setMotors() {
+	motorSet(LEFT_MOTOR_PORT, leftMotorValue);
+	motorSet(RIGHT_MOTOR_PORT, rightMotorValue);
 }
+
