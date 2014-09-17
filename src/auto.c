@@ -42,7 +42,8 @@ extern Ultrasonic rightSonar;
 extern Gyro gyro;
 
 int TURN_DISTANCE = 35;
-int BACKUP_DISTANCE = 10;
+int BACKUP_DISTANCE = 20;
+int DEFAULT_SPEED = 50;
 
 int leftSonarValue;
 int rightSonarValue;
@@ -73,7 +74,6 @@ STATE currentState;
 void autonomous() {
 	leftMotorValue = 0;
 	rightMotorValue = 0;
-
 	sense();
 	update();
 }
@@ -84,29 +84,43 @@ void turn(int speed, int direction) {
 }
 
 void move(int speed, int direction, int turnAngle) {
+	int turnMagnitude = -((abs(turnAngle)-45)/45);
 	if (turnAngle > 0) {
-		leftMotorValue  = (int)(direction * speed * ((turnAngle-45)/45));
-		rightMotorValue = (int)(direction * speed * (-(turnAngle-45)/45));
+		leftMotorValue  = (int)(direction * speed);
+		rightMotorValue = (int)(direction * speed * turnMagnitude);
 	}
 	else if (turnAngle <= 0){
-		leftMotorValue  = (int)(direction * speed * (-(turnAngle-45)/45));
-		rightMotorValue = (int)(direction * speed * ((turnAngle-45)/45));
+		leftMotorValue  = (int)(direction * speed * turnMagnitude);
+		rightMotorValue = (int)(direction * speed);
 	}
 }
 
 void update() {
-	if (leftSonarValue > rightSonarValue) {
-		move(50,1,-1);
+	if((leftSonarValue < BACKUP_DISTANCE) && (rightSonarValue < BACKUP_DISTANCE)){
+			move(DEFAULT_SPEED,-1,0);
+		}
+	else if((leftSonarValue > TURN_DISTANCE) && (rightSonarValue>TURN_DISTANCE)){
+		move(DEFAULT_SPEED,1,0);
 	}
-	else if (leftSonarValue <= rightSonarValue) {
-		move(50,1,1);
+
+	else if(leftSonarValue > rightSonarValue) {
+		move(DEFAULT_SPEED,1,(int)(-leftSonarValue/rightSonarValue)*15);
 	}
+	else if(leftSonarValue <= rightSonarValue) {
+			move(DEFAULT_SPEED,1,(int)(rightSonarValue/leftSonarValue)*15);
+		}
 	setMotors();
 }
 
 void sense() {
 	leftSonarValue = ultrasonicGet(leftSonar);
 	rightSonarValue = ultrasonicGet(rightSonar);
+	if (leftSonarValue == 0) {
+		leftSonarValue = 300;
+	}
+	if (rightSonarValue == 0) {
+			rightSonarValue = 300;
+		}
 }
 
 void setMotors() {
