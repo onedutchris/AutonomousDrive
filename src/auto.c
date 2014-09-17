@@ -35,6 +35,7 @@
 #include "main.h"
 #include "shared.h"
 #include "auto.h"
+#include <Math.h>
 
 extern Ultrasonic leftSonar;
 extern Ultrasonic rightSonar;
@@ -78,41 +79,27 @@ void autonomous() {
 }
 
 void turn(int speed, int direction) {
-	leftMotorValue =  direction * speed;
-	rightMotorValue =  direction * speed;
+	leftMotorValue = direction * speed;
+	rightMotorValue = direction * speed;
 }
 
-void move(int speed, int direction) {
-	leftMotorValue =  direction * speed;
-	rightMotorValue =  -direction * speed;
+void move(int speed, int direction, int turnAngle) {
+	if (turnAngle > 0) {
+		leftMotorValue  = (int)(direction * speed * ((turnAngle-45)/45));
+		rightMotorValue = (int)(direction * speed * (-(turnAngle-45)/45));
+	}
+	else if (turnAngle <= 0){
+		leftMotorValue  = (int)(direction * speed * (-(turnAngle-45)/45));
+		rightMotorValue = (int)(direction * speed * ((turnAngle-45)/45));
+	}
 }
 
 void update() {
 	if (leftSonarValue > rightSonarValue) {
-		if (rightSonarValue != 0) {
-			if (rightSonarValue <= BACKUP_DISTANCE) {
-				move(50, -1);
-			} else if (rightSonarValue <= TURN_DISTANCE) {
-				turn(50, -1);
-			} else {
-				move(50, 1);
-			}
-		} else {
-			move(50, 1);
-		}
-	} else if (leftSonarValue < rightSonarValue) {
-		if (leftSonarValue != 0) {
-			if (leftSonarValue <= BACKUP_DISTANCE) {
-				move(50, -1);
-			} else if (leftSonarValue <= TURN_DISTANCE) {
-				turn(50, 1);
-			} else {
-				move(50, 1);
-			}
-		} else {
-			move(50, 1);
-		}
-
+		move(50,1,-1);
+	}
+	else if (leftSonarValue <= rightSonarValue) {
+		move(50,1,1);
 	}
 	setMotors();
 }
@@ -124,6 +111,6 @@ void sense() {
 
 void setMotors() {
 	motorSet(LEFT_MOTOR_PORT, leftMotorValue);
-	motorSet(RIGHT_MOTOR_PORT, rightMotorValue);
+	motorSet(RIGHT_MOTOR_PORT, -rightMotorValue);
 }
 
