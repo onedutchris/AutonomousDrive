@@ -37,6 +37,9 @@
 
 extern Ultrasonic leftSonar;
 extern Ultrasonic rightSonar;
+extern Gyro gyro;
+
+int cycle = 0;
 /*
  * Runs the user operator control code. This function will be started in its own task with the
  * default priority and stack size whenever the robot is enabled via the Field Management System
@@ -57,13 +60,19 @@ extern Ultrasonic rightSonar;
 void operatorControl() {
 
 	while (1) {
+		cycle++;
 		motorSet(RIGHT_MOTOR_PORT,joystickGetAnalog(1,4) - joystickGetAnalog(1,3));
 		motorSet(LEFT_MOTOR_PORT,joystickGetAnalog(1,4) + joystickGetAnalog(1,3));
 		motorSet(ARM_MOTOR_PORT,-joystickGetAnalog(1,2));
 		motorSet(CLAW_MOTOR_PORT,joystickGetAnalog(1,1));
 
+		if(cycle%5 == 0){
 		printf("Left Sonar: %d\n",ultrasonicGet(leftSonar));
-		printf("Right Sonar: %d\n\n",ultrasonicGet(rightSonar));
+		printf("Right Sonar: %d\n\n",ultrasonicGet(rightSonar));}
+
+		if (cycle%10 == 0) {
+		printf("Gyro: %d\n\n",gyroGet(gyro));
+		}
 
 		//enable autonomous for testing
 		if (joystickGetDigital(1,6,'u') == 1) {
