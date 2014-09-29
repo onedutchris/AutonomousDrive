@@ -31,31 +31,6 @@
  * Purdue Robotics OS contains FreeRTOS (http://www.freertos.org) whose source code may be
  * obtained from http://sourceforge.net/projects/freertos/files/ or on request.
  */
-
-#include "main.h"
-#include "shared.h"
-#include "auto.h"
-#include <Math.h>
-
-extern Ultrasonic leftSonar;
-extern Ultrasonic rightSonar;
-extern Gyro gyro;
-
-int TURN_DISTANCE = 35;
-int BACKUP_DISTANCE = 20;
-int DEFAULT_SPEED = 50;
-
-int leftSonarValue;
-int rightSonarValue;
-
-int leftMotorValue;
-int rightMotorValue;
-
-typedef enum {
-	SEARCHING, DEPOSITING
-} STATE;
-
-STATE currentState;
 /*
  * Runs the user autonomous code. This function will be started in its own task with the default
  * priority and stack size whenever the robot is enabled via the Field Management System or the
@@ -70,17 +45,76 @@ STATE currentState;
  * The autonomous task may exit, unlike operatorControl() which should never exit. If it does
  * so, the robot will await a switch to another mode or disable/enable cycle.
  */
+#include "main.h"
+#include "shared.h"
+#include "auto.h"
+#include <Math.h>
+
+//external sensors
+extern Ultrasonic leftSonar;
+extern Ultrasonic rightSonar;
+extern Gyro gyro;
+
+//
+int TURN_DISTANCE = 35;
+int BACKUP_DISTANCE = 20;
+int DEFAULT_SPEED = 50;
+
+//map data - no grid map because that's too large
+const int num_lines = 8;
+const int num_cubes = 10;
+
+const struct cube cubes[num_cubes];
+const struct line lines[num_lines];
+
+//sensor and motor data
+int leftSonarValue;
+int rightSonarValue;
+
+int leftMotorValue;
+int rightMotorValue;
+
+
+//function definitions
+void sense();
+void update();
+void move(int speed, int direction, int turnAngle);
+void setMotors();
+
+//custom data types
+struct cube {
+	int xPos;
+	int yPos;
+};
+struct line {
+	int slope;
+	int yIntercept;
+	bool isWall; //tape or wall
+};
+typedef enum {
+	SEARCHING, DEPOSITING
+} STATE;
+
+STATE currentState;
+
+typedef struct Robot {
+	int x;
+	int y;
+	float heading;
+} Robot;
+
+
+//implementations
+void Auto_init() {
+	printf("initing");
+}
 
 void autonomous() {
+	//called every 20 ms
 	leftMotorValue = 0;
 	rightMotorValue = 0;
 	sense();
 	update();
-}
-
-void turn(int speed, int direction) {
-	leftMotorValue = direction * speed;
-	rightMotorValue = direction * speed;
 }
 
 void move(int speed, int direction, int turnAngle) {
@@ -124,7 +158,9 @@ void sense() {
 }
 
 void setMotors() {
-	motorSet(LEFT_MOTOR_PORT, leftMotorValue);
-	motorSet(RIGHT_MOTOR_PORT, -rightMotorValue);
+	motorSet(LEFT_MOTOR_1_PORT, leftMotorValue);
+	motorSet(LEFT_MOTOR_2_PORT, leftMotorValue);
+	motorSet(RIGHT_MOTOR_1_PORT, -rightMotorValue);
+	motorSet(RIGHT_MOTOR_2_PORT, -rightMotorValue);
 }
 
