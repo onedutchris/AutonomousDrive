@@ -34,6 +34,7 @@
 
 #include "shared.h"
 #include "main.h"
+#include "auto.h"
 
 Ultrasonic leftSonar;
 Ultrasonic rightSonar;
@@ -65,8 +66,9 @@ void initializeIO() {
  */
 void initialize() {
 
-
+	//initialize sensors
 	leftSonar = ultrasonicInit(LEFT_SONAR_PORT,LEFT_SONAR_PORT+1);
 	rightSonar = ultrasonicInit(RIGHT_SONAR_PORT,RIGHT_SONAR_PORT+1);
 	gyro = gyroInit(GYRO_PORT,0);
+	Auto_init();
 }
