@@ -50,36 +50,6 @@
 #include "auto.h"
 #include <Math.h>
 
-//external sensors
-extern Ultrasonic leftSonar;
-extern Ultrasonic rightSonar;
-extern Gyro gyro;
-
-//
-int TURN_DISTANCE = 35;
-int BACKUP_DISTANCE = 20;
-int DEFAULT_SPEED = 50;
-
-//map data - no grid map because that's too large
-const int num_lines = 8;
-const int num_cubes = 10;
-
-const struct cube cubes[num_cubes];
-const struct line lines[num_lines];
-
-//sensor and motor data
-int leftSonarValue;
-int rightSonarValue;
-
-int leftMotorValue;
-int rightMotorValue;
-
-
-//function definitions
-void sense();
-void update();
-void move(int speed, int direction, int turnAngle);
-void setMotors();
 
 //custom data types
 struct cube {
@@ -95,18 +65,51 @@ typedef enum {
 	SEARCHING, DEPOSITING
 } STATE;
 
+
+//external sensors
+extern Ultrasonic leftSonar;
+extern Ultrasonic rightSonar;
+extern Gyro gyro;
+
 STATE currentState;
 
-typedef struct Robot {
-	int x;
-	int y;
-	float heading;
-} Robot;
+//sensor noise
+#define ULTRASONIC_NOISE 0.5
+#define ENCODER_NOISE 0.5
+#define LINE_TRACKER_NOISE 0.5
+#define POTENTIOMETER_NOISE 0.5
+
+//map data - no grid map because that's too large
+#define NUM_LINES 8
+#define NUM_CUBES 10
+const struct cube cubes[NUM_CUBES];
+const struct line lines[NUM_LINES];
+
+//particles
+#define NUM_PARTICLES 100
+struct Robot particles[NUM_PARTICLES];
+
+//sensor and motor data
+int leftSonarValue;
+int rightSonarValue;
+
+int leftMotorValue;
+int rightMotorValue;
+
+//function definitions
+void sense();
+void update();
+void move(int speed, int direction, int turnAngle);
+void setMotors();
 
 
 //implementations
 void Auto_init() {
 	printf("initing");
+	//initialize particles
+	for (int i = 0; i<NUM_PARTICLES; i++) {
+		//Robot_init(particles[i]);
+	}
 }
 
 void autonomous() {
@@ -130,19 +133,7 @@ void move(int speed, int direction, int turnAngle) {
 }
 
 void update() {
-	if((leftSonarValue < BACKUP_DISTANCE) && (rightSonarValue < BACKUP_DISTANCE)){
-			move(DEFAULT_SPEED,-1,0);
-		}
-	else if((leftSonarValue > TURN_DISTANCE) && (rightSonarValue>TURN_DISTANCE)){
-		move(DEFAULT_SPEED,1,0);
-	}
 
-	else if(leftSonarValue > rightSonarValue) {
-		move(DEFAULT_SPEED,1,(int)(-leftSonarValue/rightSonarValue)*15);
-	}
-	else if(leftSonarValue <= rightSonarValue) {
-			move(DEFAULT_SPEED,1,(int)(rightSonarValue/leftSonarValue)*15);
-		}
 	setMotors();
 }
 
