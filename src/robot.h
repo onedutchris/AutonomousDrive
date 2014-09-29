@@ -12,8 +12,8 @@ struct Robot Robot_move(struct Robot robot, int speed, int direction, int turnAn
 
 float Robot_measurementProbability(struct Robot robot); //get measurement probability of particle
 
-void Robot_setNoise(struct Robot * robot, sonar_noise,move_noise,gyro_noise);
+void Robot_setNoise(struct Robot * robot, float sonar_noise, float move_noise, float gyro_noise);
 
-void Robot_init(struct Robot * robot, int mapSize);
+void Robot_init(struct Robot* robot, int mapSize);
 
 #endif /* ROBOT_H_ */

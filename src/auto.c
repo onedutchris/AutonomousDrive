@@ -49,7 +49,7 @@
 #include "shared.h"
 #include "auto.h"
 #include <Math.h>
-
+#include "robot.h"
 
 //custom data types
 struct cube {
@@ -108,7 +108,7 @@ void Auto_init() {
 	printf("initing");
 	//initialize particles
 	for (int i = 0; i<NUM_PARTICLES; i++) {
-		//Robot_init(particles[i]);
+		Robot_init(&particles[i], 100);
 	}
 }
 
