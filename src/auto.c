@@ -163,4 +163,4 @@ void setMotors() {
 	motorSet(RIGHT_MOTOR_1_PORT, -rightMotorValue);
 	motorSet(RIGHT_MOTOR_2_PORT, -rightMotorValue);
 }
-
+//auto.c
