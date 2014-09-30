@@ -6,14 +6,16 @@
  */
 #include <stdlib.h>
 #include <auto.h>
-
+#include "main.h"
+#include <time.h>
+#include<math.h>
 
 void Robot_init(struct Robot * robot, int mapSize) {
 	//TODO: random seed
-	srand(112312);
-	robot->x = (int) rand()*mapSize;
-	robot->y = (int) rand()*mapSize;
-	robot->heading = rand() * 2 * 3.14;
+	//srand(time(NULL));
+	robot->x = (int) floor(((float)rand()/RAND_MAX)*mapSize);
+	robot->y = (int) floor(((float)rand()/RAND_MAX)*mapSize);
+	robot->heading = ((float)rand()/RAND_MAX) * 2 * 3.14;
 }
 
 struct Robot Robot_move(struct Robot robot, int speed, int direction, int turnAngle) {
