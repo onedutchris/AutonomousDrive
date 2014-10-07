@@ -59,16 +59,17 @@ int cycle = 0;
  */
 void operatorControl() {
 
+	pinMode(1,OUTPUT);
 	while (1) {
 		cycle++;
-		motorSet(RIGHT_MOTOR_1_PORT,(joystickGetAnalog(1,3) - joystickGetAnalog(1,4)));
+		/*motorSet(RIGHT_MOTOR_1_PORT,(joystickGetAnalog(1,3) - joystickGetAnalog(1,4)));
 		motorSet(RIGHT_MOTOR_2_PORT,-(joystickGetAnalog(1,3) - joystickGetAnalog(1,4)));
 
 		motorSet(LEFT_MOTOR_1_PORT,joystickGetAnalog(1,3) + joystickGetAnalog(1,4));
 		motorSet(LEFT_MOTOR_2_PORT,(joystickGetAnalog(1,3) + joystickGetAnalog(1,4)));
 
 		motorSet(ARM_MOTOR_PORT,-joystickGetAnalog(1,2));
-		motorSet(CLAW_MOTOR_PORT,joystickGetAnalog(1,1));
+		motorSet(CLAW_MOTOR_PORT,joystickGetAnalog(1,1));*/
 
 		/*if(cycle%5 == 0){
 		printf("Left Sonar: %d\n",ultrasonicGet(leftSonar));
@@ -81,9 +82,9 @@ void operatorControl() {
 
 		//enable autonomous for testing
 		if (joystickGetDigital(1,6,'u') == 1) {
-
-			autonomous();
+			digitalWrite(1, HIGH);
 		}
+		else {digitalWrite(1, LOW);}
 		delay(50);
 	}
 }
