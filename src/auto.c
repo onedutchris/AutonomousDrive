@@ -64,13 +64,6 @@ typedef enum {
 	SEARCHING, DEPOSITING
 } STATE;
 
-struct Particle {
-	int x;
-	int y;
-	float heading;
-	float weight;
-};
-
 
 //external sensors
 extern Ultrasonic leftSonar;
@@ -163,7 +156,7 @@ void sense() {
 	//}
 	//if (rightSonarValue == 0) {
 	//		rightSonarValue = 300;
-		}
+	//	}
 }
 
 void setMotors() {
@@ -193,6 +186,6 @@ struct Particle * move_particles(struct Particle p[], int speed, int direction, 
 float mes_prob_particles(struct Particle Particle) {
 
 }
-void Particle_setNoise(struct Particle * Particle, float sonar_noise, float move_noise,float gyro_noise) {
+void set_noise_particles(struct Particle * Particle, float sonar_noise, float move_noise,float gyro_noise) {
 
 };

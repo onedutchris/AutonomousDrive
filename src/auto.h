@@ -8,13 +8,22 @@
 #ifndef AUTO_H_
 #define AUTO_H_
 
+
+struct Particle {
+	int x;
+	int y;
+	float heading;
+	float weight;
+};
+
+
 void sense();
 void update_filter();
 void move(int speed, int direction, int turnAngle);
 void setMotors();
 void calculateMovement();
 struct Particle * init_particles();
-struct Particle * move_particles(struct Particle Particle, int speed, int direction, int turnAngle); //convolute Particles
+struct Particle * move_particles(struct Particle p[], int speed, int direction, int turnAngle); //convolute Particles
 float mes_prob_particles(struct Particle Particle); //get measurement probability of Particle
 void set_noise_particles(struct Particle * Particle, float sonar_noise, float move_noise, float gyro_noise);
 void Auto_init();
