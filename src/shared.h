@@ -15,9 +15,12 @@
 #define ARM_MOTOR_PORT 7
 #define CLAW_MOTOR_PORT 6
 
+#define LEFT_MOTOR_IME 0
+#define RIGHT_MOTOR_IME 1
+
 #define LEFT_SONAR_PORT 8
 #define RIGHT_SONAR_PORT 5
 #define GYRO_PORT 2
-
+#define PI 3.14
 
 #endif /* SHARED_H_ */
