@@ -50,75 +50,14 @@
 #include "auto.h"
 #include <Math.h>
 
-//custom data types
-struct cube {
-	int xPos;
-	int yPos;
-};
-struct line {
-	int slope;
-	int yIntercept;
-	bool isWall; //tape or wall
-};
-typedef enum {
-	SEARCHING, DEPOSITING
-} STATE;
-
-
-//external sensors
-extern Ultrasonic leftSonar;
-extern Ultrasonic rightSonar;
-extern Gyro gyro;
-
-STATE currentState;
-
-//sensor cosntants
-#define ULTRASONIC_NOISE 0.5
-#define ENCODER_NOISE 0.5
-#define LINE_TRACKER_NOISE 0.5
-#define POTENTIOMETER_NOISE 0.5
-
-//movement constants
-#define WHEEL_RADIUS
-
-//map data - no grid map because that's too large
-#define NUM_LINES 8
-#define NUM_CUBES 10
-const struct cube cubes[NUM_CUBES];
-const struct line lines[NUM_LINES];
-#define MAP_SIZE 100
-
-//Particles
-#define NUM_PARTICLES 100
-struct Particle * particles;
-
-/*//sensor and motor data
-int leftSonarValue;
-int rightSonarValue;
-
-int leftMotorValue;
-int rightMotorValue;
-*/
-
-//filter parameters
-
 
 //implementations
 void Auto_init() {
 	//initialize Particles
-	particles = init_particles();
 }
 
 void autonomous() {
 
-	//update movement values
-	//calculateMovement();
-
-	//move();
-	//update sensor values
-	sense();
-
-	//update_filter();
 }
 
 void move(int speed, int direction, int turnAngle) {
@@ -133,31 +72,6 @@ void move(int speed, int direction, int turnAngle) {
 	}
 }
 
-void update_filter() {
-
-	//update the weights
-	//weights = mes_prob_particles(Particles);
-
-	//move Particles
-	//Particles = convolute_particles(Particles);
-
-	//resample Particles
-	//Particles = resample_particles(Particles);
-
-	setMotors();
-}
-
-void sense() {
-	//leftSonarValue = ultrasonicGet(leftSonar);
-	//rightSonarValue = ultrasonicGet(rightSonar);
-
-	//if (leftSonarValue == 0) {
-		//leftSonarValue = 300;
-	//}
-	//if (rightSonarValue == 0) {
-	//		rightSonarValue = 300;
-	//	}
-}
 
 void setMotors() {
 	//motorSet(LEFT_MOTOR_1_PORT, leftMotorValue);
@@ -165,27 +79,3 @@ void setMotors() {
 	//motorSet(RIGHT_MOTOR_1_PORT, -rightMotorValue);
 	//motorSet(RIGHT_MOTOR_2_PORT, -rightMotorValue);
 }
-
-//*****PARTICLE FILTER METHODS******//
-
-struct Particle * init_particles() {
-	struct Particle p[NUM_PARTICLES];
-	for (int i = 0; i<NUM_PARTICLES; i++) {
-			p[i].x = (int) floor(((float)rand()/RAND_MAX)*MAP_SIZE);
-			p[i].y = (int) floor(((float)rand()/RAND_MAX)*MAP_SIZE);
-			p[i].heading = ((float)rand()/RAND_MAX) * 2 * 3.14;
-	}
-	return p;
-}
-
-//TODO: Fix motion model
-struct Particle * move_particles(struct Particle p[], int speed, int direction, int turnAngle) {
-
-}
-
-float mes_prob_particles(struct Particle Particle) {
-
-}
-void set_noise_particles(struct Particle * Particle, float sonar_noise, float move_noise,float gyro_noise) {
-
-};
