@@ -22,9 +22,10 @@ void update_filter();
 struct Particle calculateMovement();
 struct Particle * init_particles();
 
+void initialize_filter();
 void initialize_particle(struct Particle * particle);
 void move_particle(struct Particle * particle, struct Particle * translation); //convolute Particles
 void mes_prob_particle(struct Particle * particle); //get measurement probability of Particle
-void set_noise_particle(struct Particle * particle, float sonar_noise, float move_noise, float gyro_noise);
+void particleFilter(void * ignore);
 
 #endif /* LOCALIZER_H_ */

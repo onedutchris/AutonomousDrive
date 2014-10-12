@@ -43,12 +43,10 @@ extern Gyro gyro;
 #define ENCODER_NOISE 0.5
 #define LINE_TRACKER_NOISE 0.5
 #define POTENTIOMETER_NOISE 0.5
-#define TICKS_PER_REV 627
 
 //movement constants
-#define WHEEL_RADIUS 10
-#define WHEEL_CIRCUMFRENCE 10
-#define ROBOT_WIDTH 10
+#define MOVE_PER_TICK 0.1f
+#define ROBOT_WIDTH 10.0f
 
 //map data - no grid map because that's too large
 #define NUM_LINES 8
@@ -62,28 +60,34 @@ const struct line lines[NUM_LINES];
 struct Particle particles[NUM_PARTICLES];
 struct SensorData sensorValues;
 /*//sensor and motor data
-int leftSonarValue;
-int rightSonarValue;
+ int leftSonarValue;
+ int rightSonarValue;
 
-int leftMotorValue;
-int rightMotorValue;
-*/
+ int leftMotorValue;
+ int rightMotorValue;
+ */
 
 //filter parameters
-
 
 //implementation
 void initialize_filter() {
 	//initialize particles
-	for (int i = 0; i<NUM_PARTICLES; i++) {
-			initialize_particle(&particles[i]);
-		}
+	for (int i = 0; i < NUM_PARTICLES; i++) {
+		initialize_particle(&particles[i]);
+	}
+
 }
 
 void particleFilter(void* ignore) {
-	sensorValues = sense();
-	calculateMovement;
-	update_filter();
+	initialize_filter();
+	struct Particle translation = calculateMovement(10,0);
+	printf("Translation: %d %d %f", translation.x,translation.y,translation.heading);
+	while (true) {
+		sensorValues = sense();
+		//calculateMovement;
+		update_filter();
+		wait(30);
+	}
 }
 
 void update_filter() {
@@ -100,8 +104,8 @@ void update_filter() {
 
 struct SensorData sense() {
 	struct SensorData values;
-	imeGet(LEFT_MOTOR_IME,&values.leftEncoder);
-	imeGet(RIGHT_MOTOR_IME,&values.rightEncoder);
+	imeGet(LEFT_MOTOR_IME, &values.leftEncoder);
+	imeGet(RIGHT_MOTOR_IME, &values.rightEncoder);
 	return values;
 
 }
@@ -109,32 +113,29 @@ struct SensorData sense() {
 //*****PARTICLE FILTER METHODS******//
 
 void initialize_particle(struct Particle * particle) {
-			particle->x = (int) floor(((float)rand()/RAND_MAX)*MAP_SIZE);
-			particle->y = (int) floor(((float)rand()/RAND_MAX)*MAP_SIZE);
-			particle->heading = ((float)rand()/RAND_MAX) * 2 * 3.14;
+	particle->x = (int) floor(((float) rand() / RAND_MAX) * MAP_SIZE);
+	particle->y = (int) floor(((float) rand() / RAND_MAX) * MAP_SIZE);
+	particle->heading = ((float) rand() / RAND_MAX) * 2 * 3.14;
 }
 
 //TODO: Fix motion model
 void move_particle(struct Particle * particle, struct Particle * translation) {
 	particle->x += translation->x;
 	particle->y += translation->y;
-	particle->heading += fmodf(translation->heading, (2*PI)); //normalize
+	particle->heading += fmodf(translation->heading, (2 * PI)); //normalize
 }
 
 void mes_prob_particle(struct Particle * particle) {
-
-}
-void set_noise_particle(struct Particle * particle, float sonar_noise, float move_noise,float gyro_noise) {
 
 }
 
 struct Particle calculateMovement(int leftEncoderValue, int rightEncoderValue) {
 	//TODO: more accurate movement model
 	struct Particle translation;
-	float SL = (leftEncoderValue/TICKS_PER_REV) * WHEEL_CIRCUMFRENCE;
-	float SR = (rightEncoderValue/TICKS_PER_REV) * WHEEL_CIRCUMFRENCE;
-	float meanS = (SL+SR)/2;
-	float theta = (SL-SR)/ROBOT_WIDTH;
+	float SL = leftEncoderValue * MOVE_PER_TICK;
+	float SR = rightEncoderValue * MOVE_PER_TICK;
+	float meanS = (SL + SR) / 2;
+	float theta = (SL - SR) / ROBOT_WIDTH;
 	translation.heading = theta;
 	translation.x = meanS * cos(theta);
 	translation.y = meanS * sin(theta);
