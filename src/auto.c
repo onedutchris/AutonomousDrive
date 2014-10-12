@@ -49,11 +49,12 @@
 #include "shared.h"
 #include "auto.h"
 #include <Math.h>
+#include "localizer.h"
 
 
 //implementations
 void Auto_init() {
-	//initialize Particles
+	taskCreate(particleFilter, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT);
 }
 
 void autonomous() {
