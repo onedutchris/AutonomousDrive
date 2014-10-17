@@ -31,7 +31,9 @@ struct SensorData {
 	int lineTracker1;
 	int lineTracker2;
 	int lineTracker3;
+	float gyro;
 };
+#define PI 3.14
 
 //external sensors
 extern Ultrasonic leftSonar;
@@ -45,7 +47,7 @@ extern Gyro gyro;
 #define POTENTIOMETER_NOISE 0.5
 
 //movement constants
-#define MOVE_PER_TICK 0.1f
+#define MOVE_PER_TICK 0.03757f // (18/24 * 10 * PI) / 627.1
 #define ROBOT_WIDTH 10.0f
 
 //map data - no grid map because that's too large
@@ -59,6 +61,7 @@ const struct line lines[NUM_LINES];
 #define NUM_PARTICLES 100
 struct Particle particles[NUM_PARTICLES];
 struct SensorData sensorValues;
+float moveDistance;
 /*//sensor and motor data
  int leftSonarValue;
  int rightSonarValue;
@@ -80,20 +83,22 @@ void initialize_filter() {
 
 void particleFilter(void* ignore) {
 	initialize_filter();
-	struct Particle translation = calculateMovement(10,0);
-	printf("Translation: %d %d %f", translation.x,translation.y,translation.heading);
-	while (true) {
+	while (1) {
+
 		sensorValues = sense();
-		//calculateMovement;
-		update_filter();
-		wait(30);
+		moveDistance = calculateMovement(sensorValues.leftEncoder,sensorValues.rightEncoder);
+		printf("Movement Forward: %f \n",moveDistance);
+		update_filter(moveDistance, sensorValues.gyro);
+		delay(5000);
 	}
 }
 
-void update_filter() {
+void update_filter(float distance, float rotation) {
 
 	//move Particles
-	//Particles = convolute_particles(Particles);
+	for (int i = 0; i< NUM_PARTICLES; i++) {
+		move_particle(&particles[i], moveDistance, rotation);
+	}
 
 	//update the weights
 	//weights = mes_prob_particles(Particles);
@@ -106,6 +111,11 @@ struct SensorData sense() {
 	struct SensorData values;
 	imeGet(LEFT_MOTOR_IME, &values.leftEncoder);
 	imeGet(RIGHT_MOTOR_IME, &values.rightEncoder);
+	imeReset(LEFT_MOTOR_IME);
+	imeReset(RIGHT_MOTOR_IME);
+	values.gyro = gyroGet(gyro);
+	values.leftSonar = ultrasonicGet(leftSonar);
+	values.rightSonar = ultrasonicGet(rightSonar);
 	return values;
 
 }
@@ -118,29 +128,55 @@ void initialize_particle(struct Particle * particle) {
 	particle->heading = ((float) rand() / RAND_MAX) * 2 * 3.14;
 }
 
-//TODO: Fix motion model
-void move_particle(struct Particle * particle, struct Particle * translation) {
-	particle->x += translation->x;
-	particle->y += translation->y;
-	particle->heading += fmodf(translation->heading, (2 * PI)); //normalize
+//simplified motion model assuming robot turns then moves
+void move_particle(struct Particle * particle, float distance, float direction) {
+	float newHeading = particle->heading + direction;
+	particle->x += cos(newHeading) * distance;
+	particle->y += sin(newHeading) * distance;
+	particle->heading += fmodf(newHeading, (2 * PI)); //keep within -2pi to 2pi
 }
 
 void mes_prob_particle(struct Particle * particle) {
 
 }
 
-struct Particle calculateMovement(int leftEncoderValue, int rightEncoderValue) {
+float calculateMovement(int leftEncoderValue, int rightEncoderValue) {
 	//TODO: more accurate movement model
-	struct Particle translation;
-	float SL = leftEncoderValue * MOVE_PER_TICK;
+	//struct Particle translation;
+	float SL = -leftEncoderValue * MOVE_PER_TICK;
 	float SR = rightEncoderValue * MOVE_PER_TICK;
 	float meanS = (SL + SR) / 2;
-	float theta = (SL - SR) / ROBOT_WIDTH;
-	translation.heading = theta;
-	translation.x = meanS * cos(theta);
-	translation.y = meanS * sin(theta);
-	return translation;
+	return meanS;
+	//float theta = (SL - SR) / ROBOT_WIDTH;
+	//printf("Encoder: %f, %f \n", SL, SR);
+	//translation.heading = theta;
+	//translation.x = meanS * cos(theta);
+	//translation.y = meanS * sin(theta);
+	//return translation;
+	//distance = (left_encoder + right_encoder) / 2.0
+	//(2)	theta = (left_encoder - right_encoder) / WHEEL_BASE;
+}
 
+float gaussianNoise (int mu, int sigma) {
+	//taken from wikiipedia
+	//TODO: more efficient polar method
+	static int haveSpareRandoms = 0;
+	static double rand1, rand2;
+
+	//use the other equation of box muller transformation
+	if(haveSpareRandoms) {
+		haveSpareRandoms = 0;
+		return (sqrt(rand1) * sin(rand2) * sigma) + mu;
+	}
+	haveSpareRandoms = 1;
+	rand1 = rand() / (double) RAND_MAX;
+	//printf("RAND1: %f \n", rand1);
+	//if(rand1 < 1e-6) rand1 = 1e-6;
+	rand1 = -2 * log(rand1);
+	//printf("Log RAND1: %f \n", rand1);
+	rand2 = (rand() / ((double) RAND_MAX)) * 2 * PI;
+
+	return (sqrt(rand1) * cos(rand2) * sigma) + mu;
 }
 
 #endif /* LOCALIZER_C_ */
