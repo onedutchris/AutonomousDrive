@@ -35,11 +35,6 @@
 #include "shared.h"
 #include "main.h"
 
-extern Ultrasonic leftSonar;
-extern Ultrasonic rightSonar;
-extern Gyro gyro;
-
-int cycle = 0;
 /*
  * Runs the user operator control code. This function will be started in its own task with the
  * default priority and stack size whenever the robot is enabled via the Field Management System
@@ -59,30 +54,25 @@ int cycle = 0;
  */
 void operatorControl() {
 
-	pinMode(1,OUTPUT);
+	//pinMode(1,OUTPUT);
 	while (1) {
-		cycle++;
-		motorSet(RIGHT_MOTOR_1_PORT,-(joystickGetAnalog(1,3) - joystickGetAnalog(1,4)));
-		motorSet(RIGHT_MOTOR_2_PORT,(joystickGetAnalog(1,3) - joystickGetAnalog(1,4)));
+		motorSet(RIGHT_MOTOR_1_PORT,(joystickGetAnalog(1,3) - joystickGetAnalog(1,4)));
+		motorSet(RIGHT_MOTOR_2_PORT,-(joystickGetAnalog(1,3) - joystickGetAnalog(1,4)));
 
 		motorSet(LEFT_MOTOR_1_PORT,(joystickGetAnalog(1,3) + joystickGetAnalog(1,4)));
 		motorSet(LEFT_MOTOR_2_PORT,-(joystickGetAnalog(1,3) + joystickGetAnalog(1,4)));
 
-		motorSet(ARM_MOTOR_PORT,-joystickGetAnalog(1,2));
-		motorSet(CLAW_MOTOR_PORT,joystickGetAnalog(1,1));
-
 		//enable autonomous for testing
 		if (joystickGetDigital(1,6,'u') == 1) {
-			//autonomous();
 		}
-
+		else if (joystickGetDigital(1,6,'u') == 0) {
+				}
 		int lC;
 		int rC;
-		imeGet(LEFT_MOTOR_IME,lC);
-		imeGet(RIGHT_MOTOR_IME,rC);
-		printf("Left count: %d, right count %d \n", lC,rC);
-
-		delay(50);
+		imeGet(LEFT_MOTOR_IME, &lC);
+		imeGet(RIGHT_MOTOR_IME, &rC);
+		//printf("Left count: %d, right count %d \n", lC,rC);
+		delay(20);
 	}
 }
 
