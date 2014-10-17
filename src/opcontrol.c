@@ -56,22 +56,20 @@ void operatorControl() {
 
 	//pinMode(1,OUTPUT);
 	while (1) {
-		motorSet(RIGHT_MOTOR_1_PORT,(joystickGetAnalog(1,3) - joystickGetAnalog(1,4)));
-		motorSet(RIGHT_MOTOR_2_PORT,-(joystickGetAnalog(1,3) - joystickGetAnalog(1,4)));
+		motorSet(RIGHT_MOTOR_1_PORT,
+				(joystickGetAnalog(1, 3) - joystickGetAnalog(1, 4)) / 2);
+		motorSet(RIGHT_MOTOR_2_PORT,
+				-(joystickGetAnalog(1, 3) - joystickGetAnalog(1, 4)) / 2);
 
-		motorSet(LEFT_MOTOR_1_PORT,(joystickGetAnalog(1,3) + joystickGetAnalog(1,4)));
-		motorSet(LEFT_MOTOR_2_PORT,-(joystickGetAnalog(1,3) + joystickGetAnalog(1,4)));
+		motorSet(LEFT_MOTOR_1_PORT,
+				(joystickGetAnalog(1, 3) + joystickGetAnalog(1, 4)) / 2);
+		motorSet(LEFT_MOTOR_2_PORT,
+				-(joystickGetAnalog(1, 3) + joystickGetAnalog(1, 4)) / 2);
 
 		//enable autonomous for testing
-		if (joystickGetDigital(1,6,'u') == 1) {
+		if (joystickGetDigital(1, 6, 'u') == 1) {
+		} else if (joystickGetDigital(1, 6, 'u') == 0) {
 		}
-		else if (joystickGetDigital(1,6,'u') == 0) {
-				}
-		int lC;
-		int rC;
-		imeGet(LEFT_MOTOR_IME, &lC);
-		imeGet(RIGHT_MOTOR_IME, &rC);
-		//printf("Left count: %d, right count %d \n", lC,rC);
 		delay(20);
 	}
 }
