@@ -39,7 +39,6 @@
 Ultrasonic leftSonar;
 Ultrasonic rightSonar;
 Gyro gyro;
-int encoder_count;
 
 /*
  * Runs pre-initialization code. This function will be started in kernel mode one time while the
@@ -71,7 +70,8 @@ void initialize() {
 	leftSonar = ultrasonicInit(LEFT_SONAR_PORT,LEFT_SONAR_PORT+1);
 	rightSonar = ultrasonicInit(RIGHT_SONAR_PORT,RIGHT_SONAR_PORT+1);
 	gyro = gyroInit(GYRO_PORT,0);
-	encoder_count = imeInitializeAll();
+	int encoder_count = imeInitializeAll();
+	printf("IMEs Initialized: %d \n",encoder_count);
 	imeReset(LEFT_MOTOR_IME);
 	imeReset(RIGHT_MOTOR_IME);
 	Auto_init();
