@@ -21,6 +21,8 @@
 #define LEFT_SONAR_PORT 8
 #define RIGHT_SONAR_PORT 5
 #define GYRO_PORT 2
+
 #define PI 3.14
+#define DEGREES_TO_RADIANS 0.01745f
 
 #endif /* SHARED_H_ */
