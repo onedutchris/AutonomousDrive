@@ -14,6 +14,14 @@
 #include "Localizer.h"
 
 //custom data types
+struct Particle {
+	int x;
+	int y;
+	float heading;
+	float weight;
+};
+
+
 struct cube {
 	int xPos;
 	int yPos;
@@ -56,6 +64,7 @@ extern Gyro gyro;
 const struct cube cubes[NUM_CUBES];
 const struct line lines[NUM_LINES];
 #define MAP_SIZE 100
+const struct Particle start_position = {.x = 5, .y = 5, .heading = 0};
 
 //Particles
 #define NUM_PARTICLES 100
@@ -76,7 +85,7 @@ float moveDistance;
 void initialize_filter() {
 	//initialize particles
 	for (int i = 0; i < NUM_PARTICLES; i++) {
-		initialize_particle(&particles[i]);
+		initialize_particle(&particles[i], &start_position);
 	}
 
 }
@@ -87,9 +96,13 @@ void particleFilter(void* ignore) {
 
 		sensorValues = sense();
 		moveDistance = calculateMovement(sensorValues.leftEncoder,sensorValues.rightEncoder);
-		printf("Movement Forward: %f \n",moveDistance);
 		update_filter(moveDistance, sensorValues.gyro);
-		delay(5000);
+
+		printf("Encoder: %d, %d \n", sensorValues.leftEncoder, sensorValues.rightEncoder);
+		printf("Movement Forward: %f \n",moveDistance);
+		printf("Gyro: %f \n", sensorValues.gyro);
+		printf("Particle: X is %d, Y is %d, Theta is %f \n", particles[1].x,particles[1].y,particles[1].heading);
+		delay(500);
 	}
 }
 
@@ -97,7 +110,7 @@ void update_filter(float distance, float rotation) {
 
 	//move Particles
 	for (int i = 0; i< NUM_PARTICLES; i++) {
-		move_particle(&particles[i], moveDistance, rotation);
+		move_particle(&particles[i], distance, rotation);
 	}
 
 	//update the weights
@@ -111,21 +124,23 @@ struct SensorData sense() {
 	struct SensorData values;
 	imeGet(LEFT_MOTOR_IME, &values.leftEncoder);
 	imeGet(RIGHT_MOTOR_IME, &values.rightEncoder);
-	imeReset(LEFT_MOTOR_IME);
-	imeReset(RIGHT_MOTOR_IME);
-	values.gyro = gyroGet(gyro);
+	values.gyro = gyroGet(gyro) * 0.01745f;
 	values.leftSonar = ultrasonicGet(leftSonar);
 	values.rightSonar = ultrasonicGet(rightSonar);
+
+	imeReset(LEFT_MOTOR_IME);
+	imeReset(RIGHT_MOTOR_IME);
+	gyroReset(gyro);
 	return values;
 
 }
 
 //*****PARTICLE FILTER METHODS******//
 
-void initialize_particle(struct Particle * particle) {
-	particle->x = (int) floor(((float) rand() / RAND_MAX) * MAP_SIZE);
-	particle->y = (int) floor(((float) rand() / RAND_MAX) * MAP_SIZE);
-	particle->heading = ((float) rand() / RAND_MAX) * 2 * 3.14;
+void initialize_particle(struct Particle * particle, struct Particle * startPos) {
+	particle->x = startPos->x;
+	particle->y = startPos->y;
+	particle->heading = startPos->heading;
 }
 
 //simplified motion model assuming robot turns then moves
@@ -148,7 +163,6 @@ float calculateMovement(int leftEncoderValue, int rightEncoderValue) {
 	float meanS = (SL + SR) / 2;
 	return meanS;
 	//float theta = (SL - SR) / ROBOT_WIDTH;
-	//printf("Encoder: %f, %f \n", SL, SR);
 	//translation.heading = theta;
 	//translation.x = meanS * cos(theta);
 	//translation.y = meanS * sin(theta);
