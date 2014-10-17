@@ -92,15 +92,18 @@ void initialize_filter() {
 
 void particleFilter(void* ignore) {
 	initialize_filter();
+
+	//delay to allow calibrations
+	delay(2000);
 	while (1) {
 
 		sensorValues = sense();
 		moveDistance = calculateMovement(sensorValues.leftEncoder,sensorValues.rightEncoder);
 		update_filter(moveDistance, sensorValues.gyro);
 
-		printf("Encoder: %d, %d \n", sensorValues.leftEncoder, sensorValues.rightEncoder);
-		printf("Movement Forward: %f \n",moveDistance);
-		printf("Gyro: %f \n", sensorValues.gyro);
+		//printf("Encoder: %d, %d \n", sensorValues.leftEncoder, sensorValues.rightEncoder);
+		//printf("Movement Forward: %f \n",moveDistance);
+		//printf("Gyro: %f \n", sensorValues.gyro);
 		printf("Particle: X is %d, Y is %d, Theta is %f \n", particles[1].x,particles[1].y,particles[1].heading);
 		delay(500);
 	}
@@ -148,7 +151,9 @@ void move_particle(struct Particle * particle, float distance, float direction) 
 	float newHeading = particle->heading + direction;
 	particle->x += cos(newHeading) * distance;
 	particle->y += sin(newHeading) * distance;
-	particle->heading += fmodf(newHeading, (2 * PI)); //keep within -2pi to 2pi
+	particle->heading += newHeading;//fmodf(newHeading, (2 * PI)); //keep within -2pi to 2pi
+	//printf("direction: %f, oldParticleHeading: newHeading: %f",direction,newHeading,particle->heading);
+
 }
 
 void mes_prob_particle(struct Particle * particle) {
