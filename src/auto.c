@@ -50,17 +50,13 @@
 #include "auto.h"
 #include <Math.h>
 #include "localizer.h"
+#include "driver.h"
 
-struct waypoint {
-	int x;
-	int y;
-	int rotation;
-	int liftHeight;
-};
 
 //implementations
 void auto_init() {
-	taskCreate(particleFilter, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT);
+	taskCreate(localizer, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT);
+	taskCreate(driver, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT);
 }
 
 void autonomous() {
