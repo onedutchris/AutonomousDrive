@@ -64,7 +64,7 @@ extern Gyro gyro;
 const struct cube cubes[NUM_CUBES];
 const struct line lines[NUM_LINES];
 #define MAP_SIZE 100
-const struct Particle start_position = {.x = 5, .y = 5, .heading = 0};
+const struct Particle start_position = {.x = 0, .y = 0, .heading = 0};
 
 //Particles
 #define NUM_PARTICLES 100
@@ -97,11 +97,14 @@ void particleFilter(void* ignore) {
 	delay(2000);
 	while (1) {
 
+		imeReset(LEFT_MOTOR_IME);
+		imeReset(RIGHT_MOTOR_IME);
+
 		sensorValues = sense();
 		moveDistance = calculateMovement(sensorValues.leftEncoder,sensorValues.rightEncoder);
 		update_filter(moveDistance, sensorValues.gyro);
 
-		//printf("Encoder: %d, %d \n", sensorValues.leftEncoder, sensorValues.rightEncoder);
+		printf("Encoder: %d, %d \n", sensorValues.leftEncoder, sensorValues.rightEncoder);
 		//printf("Movement Forward: %f \n",moveDistance);
 		//printf("Gyro: %f \n", sensorValues.gyro);
 		printf("Particle: X is %d, Y is %d, Theta is %f \n", particles[1].x,particles[1].y,particles[1].heading);
