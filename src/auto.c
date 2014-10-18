@@ -64,8 +64,7 @@ void auto_init() {
 }
 
 void autonomous() {
-	auto_init();
-
+	printf("Started Autonomous Task");
 }
 
 void move(int speed, int direction, int turnAngle) {
