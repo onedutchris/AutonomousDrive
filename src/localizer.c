@@ -106,7 +106,8 @@ void particleFilter(void* ignore) {
 		//printf("Encoder: %d, %d \n", sensorValues.leftEncoder, sensorValues.rightEncoder);
 		//printf("Movement Forward: %f \n",moveDistance);
 		//printf("Gyro: %f \n", sensorValues.gyro);
-		printf("Particle: X is %d, Y is %d, Theta is %f \n", particles[1].x,particles[1].y,particles[1].heading);
+		//printf("Particle1: X is %d, Y is %d, Theta is %f \n", particles[1].x,particles[1].y,particles[1].heading);
+		//printf("Particle2: X is %d, Y is %d, Theta is %f \n\n", particles[2].x,particles[2].y,particles[2].heading);
 		delay(500);
 	}
 }
@@ -150,7 +151,8 @@ void initialize_particle(struct Particle * particle, struct Particle * startPos)
 
 //simplified motion model assuming robot turns then moves
 void move_particle(struct Particle * particle, float distance, float direction) {
-	float newHeading = particle->heading + direction;
+	distance += gaussianNoise(0,distance/5);
+	float newHeading = particle->heading + direction + gaussianNoise(0,direction/5);
 	particle->x += sin(newHeading) * distance;
 	particle->y += cos(newHeading) * distance;
 	particle->heading = fmodf(newHeading, (2 * PI)); //keep within -2pi to 2pi
