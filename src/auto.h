@@ -11,6 +11,6 @@
 
 void setMotors();
 
-void Auto_init();
+void auto_init();
 
 #endif /* AUTO_H_ */
