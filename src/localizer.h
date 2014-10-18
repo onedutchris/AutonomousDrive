@@ -26,7 +26,7 @@ void initialize_filter();
 void initialize_particle(struct Particle * particle, struct Particle * startPos);
 void move_particle(struct Particle * particle, float distance, float direction); //convolute Particles
 void mes_prob_particle(struct Particle * particle); //get measurement probability of Particle
-void particleFilter(void * ignore);
+void localizer(void * ignore);
 struct Particle getWeightedAverage();
 
 #endif /* LOCALIZER_H_ */

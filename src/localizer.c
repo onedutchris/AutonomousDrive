@@ -83,7 +83,7 @@ void initialize_filter() {
 
 }
 
-void particleFilter(void* ignore) {
+void localizer(void* ignore) {
 	printf("Started Localizer Task");
 	initialize_filter();
 
