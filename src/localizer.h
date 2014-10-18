@@ -8,6 +8,13 @@
 #ifndef LOCALIZER_H_
 #define LOCALIZER_H_
 
+struct Particle {
+	int x;
+	int y;
+	float heading;
+	float weight;
+};
+
 
 struct SensorData sense();
 void update_filter(float distance,float rotation);
@@ -20,5 +27,6 @@ void initialize_particle(struct Particle * particle, struct Particle * startPos)
 void move_particle(struct Particle * particle, float distance, float direction); //convolute Particles
 void mes_prob_particle(struct Particle * particle); //get measurement probability of Particle
 void particleFilter(void * ignore);
+struct Particle getWeightedAverage();
 
 #endif /* LOCALIZER_H_ */

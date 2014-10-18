@@ -14,13 +14,6 @@
 #include "Localizer.h"
 
 //custom data types
-struct Particle {
-	int x;
-	int y;
-	float heading;
-	float weight;
-};
-
 
 struct cube {
 	int xPos;
@@ -91,6 +84,7 @@ void initialize_filter() {
 }
 
 void particleFilter(void* ignore) {
+	printf("Started Localizer Task");
 	initialize_filter();
 
 	//delay to allow calibrations
@@ -98,7 +92,6 @@ void particleFilter(void* ignore) {
 	imeReset(LEFT_MOTOR_IME);
 	imeReset(RIGHT_MOTOR_IME);
 	while (1) {
-
 		sensorValues = sense();
 		moveDistance = calculateMovement(sensorValues.leftEncoder,sensorValues.rightEncoder);
 		update_filter(moveDistance, sensorValues.gyro);
@@ -108,6 +101,8 @@ void particleFilter(void* ignore) {
 		//printf("Gyro: %f \n", sensorValues.gyro);
 		//printf("Particle1: X is %d, Y is %d, Theta is %f \n", particles[1].x,particles[1].y,particles[1].heading);
 		//printf("Particle2: X is %d, Y is %d, Theta is %f \n\n", particles[2].x,particles[2].y,particles[2].heading);
+		struct Particle avg = getWeightedAverage();
+		printf("Weighted Average: X is %d, Y is %d, Theta is %f \n",avg.x,avg.y,avg.heading);
 		delay(500);
 	}
 }
@@ -147,6 +142,7 @@ void initialize_particle(struct Particle * particle, struct Particle * startPos)
 	particle->x = startPos->x;
 	particle->y = startPos->y;
 	particle->heading = startPos->heading;
+	particle->weight = 1.0f/NUM_PARTICLES;
 }
 
 //simplified motion model assuming robot turns then moves
@@ -200,6 +196,24 @@ float gaussianNoise (int mu, int sigma) {
 	rand2 = (rand() / ((double) RAND_MAX)) * 2 * PI;
 
 	return (sqrt(rand1) * cos(rand2) * sigma) + mu;
+}
+
+struct Particle getWeightedAverage(){
+	struct Particle average;
+	float avgX=0;
+	float avgY=0;
+	float avgT=0;
+	for (int i = 0; i < NUM_PARTICLES; i++) {
+		float weight = particles[i].weight;
+		avgX += particles[i].x*weight;
+		avgY += particles[i].y*weight;
+		avgT += particles[i].heading*weight;
+	}
+	average.x = (int)avgX;
+	average.y = (int)avgY;
+	average.heading = avgT;
+
+	return average;
 }
 
 #endif /* LOCALIZER_C_ */
