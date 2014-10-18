@@ -51,13 +51,20 @@
 #include <Math.h>
 #include "localizer.h"
 
+struct waypoint {
+	int x;
+	int y;
+	int rotation;
+	int liftHeight;
+};
 
 //implementations
-void Auto_init() {
+void auto_init() {
 	taskCreate(particleFilter, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT);
 }
 
 void autonomous() {
+	auto_init();
 
 }
 

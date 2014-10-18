@@ -71,5 +71,4 @@ void initialize() {
 	rightSonar = ultrasonicInit(RIGHT_SONAR_PORT,RIGHT_SONAR_PORT+1);
 	gyro = gyroInit(GYRO_PORT,0);
 	int encoder_count = imeInitializeAll();
-	Auto_init();
 }
