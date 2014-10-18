@@ -153,7 +153,7 @@ void move_particle(struct Particle * particle, float distance, float direction) 
 	float newHeading = particle->heading + direction;
 	particle->x += cos(newHeading) * distance;
 	particle->y += sin(newHeading) * distance;
-	particle->heading = newHeading;//fmodf(newHeading, (2 * PI)); //keep within -2pi to 2pi
+	particle->heading = fmodf(newHeading, (2 * PI)); //keep within -2pi to 2pi
 	//printf("direction: %f, oldParticleHeading: newHeading: %f",direction,newHeading,particle->heading);
 
 }
