@@ -95,10 +95,9 @@ void particleFilter(void* ignore) {
 
 	//delay to allow calibrations
 	delay(2000);
+	imeReset(LEFT_MOTOR_IME);
+	imeReset(RIGHT_MOTOR_IME);
 	while (1) {
-
-		imeReset(LEFT_MOTOR_IME);
-		imeReset(RIGHT_MOTOR_IME);
 
 		sensorValues = sense();
 		moveDistance = calculateMovement(sensorValues.leftEncoder,sensorValues.rightEncoder);
