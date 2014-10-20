@@ -56,7 +56,10 @@
 //implementations
 void auto_init() {
 	taskCreate(localizer, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT);
+	printf("Localizer Task Started \n");
 	taskCreate(driver, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT);
+	printf("Driver Task Started \n");
+
 }
 
 void autonomous() {
@@ -75,10 +78,3 @@ void move(int speed, int direction, int turnAngle) {
 	}
 }
 
-
-void setMotors() {
-	//motorSet(LEFT_MOTOR_1_PORT, leftMotorValue);
-	//motorSet(LEFT_MOTOR_2_PORT, leftMotorValue);
-	//motorSet(RIGHT_MOTOR_1_PORT, -rightMotorValue);
-	//motorSet(RIGHT_MOTOR_2_PORT, -rightMotorValue);
-}
