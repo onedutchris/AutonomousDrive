@@ -34,6 +34,7 @@
 
 #include "shared.h"
 #include "main.h"
+#include "driver.h"
 
 /*
  * Runs the user operator control code. This function will be started in its own task with the
@@ -68,9 +69,11 @@ void operatorControl() {
 
 		//enable autonomous for testing
 		if (joystickGetDigital(1, 6, 'u') == 1) {
+		  void *d;
+			driver(d);
 		} else if (joystickGetDigital(1, 6, 'u') == 0) {
 		}
-		delay(20);
+		delay(50);
 	}
 }
 
