@@ -11,31 +11,54 @@
 #include "driver.h"
 #include "shared.h"
 
-#define ROTATION_LEEWAY 0.4f
+#define ROTATION_LEEWAY 0.5f
 
 struct waypoint waypoints[] = {
 
-		{.x = 0, .y = 100, .rotation = 6.28f}
-
+{ .x = 0, .y = 100, .rotation = 6.28f }
 
 };
 int currentTask = 0;
 
-void driver (void*ignore) {
-	delay(2000);
+void driver(void*ignore) {
 	struct Particle location = getWeightedAverage();
-	float rotationNeeded = calculateRotation(&location,&waypoints[currentTask]);
-	printf("rotation %f \n",calculateRotation(&location,&waypoints[currentTask]));
-	setRotation(rotationNeeded);
-	setMovement(&location,&waypoints[currentTask]);
-	checkComlpeted(&waypoints[currentTask]);
+	float rotationNeeded = calculateRotation(&location,
+			&waypoints[currentTask]);
+	if (fabsf(rotationNeeded) > ROTATION_LEEWAY) {
+		setRotation(rotationNeeded);
+	} else {
+		setMovement();
+	}
+	//checkComlpeted(&waypoints[currentTask]);
+	delay(20);
 }
 
-float calculateRotation(struct Particle * currentLocation, struct waypoint * goalLocation) {
+float calculateRotation(struct Particle * currentLocation,
+		struct waypoint * goalLocation) {
 	int dY = goalLocation->y - currentLocation->y;
 	int dX = goalLocation->x - currentLocation->x;
-	return PI/2-atan2(dY, dX);
+	return (PI / 2 - atan2(dY, dX)) + currentLocation->heading;
 }
 
-void setMovement(struct Particle * location,struct waypoint * waypoint) {}
+void setMovement() {
+	setMotors(50, 50);
+}
+void setRotation(float rotationNeeded) {
+	printf("Required Rotation: %f \n", rotationNeeded);
+	if (rotationNeeded < 0) {
+		setMotors(-50, 50);
+	} else {
+		setMotors(50, -50);
+	}
+}
+
+void setMotors(int leftSide, int rightSide) {
+//TODO: PID Control
+	motorSet(LEFT_MOTOR_1_PORT, leftSide);
+	motorSet(LEFT_MOTOR_2_PORT, -leftSide);
+
+	motorSet(RIGHT_MOTOR_1_PORT, rightSide);
+	motorSet(RIGHT_MOTOR_2_PORT, -rightSide);
+
+}
 

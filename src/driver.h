@@ -21,7 +21,8 @@ struct waypoint {
 void driver(void * ignore);
 float calculateRotation(struct Particle * currentLocation, struct waypoint * goalLocation);
 void setRotation(float rotationNeeded);
-void setMovement(struct Particle * location,struct waypoint * waypoint);
+void setMovement();
+void setMotors(int leftMotor, int rightMotor);
 int checkComlpeted(struct waypoint * waypoint);
 
 #endif /* DRIVER_H_ */
