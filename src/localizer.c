@@ -60,7 +60,7 @@ const struct line lines[NUM_LINES];
 const struct Particle start_position = {.x = 0, .y = 0, .heading = 0};
 
 //Particles
-#define NUM_PARTICLES 100
+#define NUM_PARTICLES 1
 struct Particle particles[NUM_PARTICLES];
 struct SensorData sensorValues;
 float moveDistance;
@@ -211,7 +211,7 @@ struct Particle getWeightedAverage(){
 	}
 	average.x = (int)avgX;
 	average.y = (int)avgY;
-	average.heading = avgT;
+	average.heading = fmodf(avgT,(2*PI));
 
 	return average;
 }
