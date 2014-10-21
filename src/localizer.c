@@ -60,7 +60,7 @@ const struct line lines[NUM_LINES];
 const struct Particle start_position = {.x = 0, .y = 0, .heading = 0};
 
 //Particles
-#define NUM_PARTICLES 1
+#define NUM_PARTICLES 100
 struct Particle particles[NUM_PARTICLES];
 struct SensorData sensorValues;
 float moveDistance;
@@ -98,12 +98,12 @@ void localizer(void* ignore) {
 
 		//printf("Encoder: %d, %d \n", sensorValues.leftEncoder, sensorValues.rightEncoder);
 		//printf("Movement Forward: %f \n",moveDistance);
-		//printf("Gyro: %f \n", sensorValues.gyro);
+		printf("Gyro: %f \n", sensorValues.gyro);
 		//printf("Particle1: X is %d, Y is %d, Theta is %f \n", particles[1].x,particles[1].y,particles[1].heading);
 		//printf("Particle2: X is %d, Y is %d, Theta is %f \n\n", particles[2].x,particles[2].y,particles[2].heading);
 		struct Particle avg = getWeightedAverage();
 		printf("Weighted Average: X is %d, Y is %d, Theta is %f \n",avg.x,avg.y,avg.heading);
-		delay(500);
+		delay(30);
 	}
 }
 
@@ -125,7 +125,7 @@ struct SensorData sense() {
 	struct SensorData values;
 	imeGet(LEFT_MOTOR_IME, &values.leftEncoder);
 	imeGet(RIGHT_MOTOR_IME, &values.rightEncoder);
-	values.gyro = gyroGet(gyro) * 0.01745f;
+	values.gyro = -1 * gyroGet(gyro) * DEGREES_TO_RADIANS;
 	values.leftSonar = ultrasonicGet(leftSonar);
 	values.rightSonar = ultrasonicGet(rightSonar);
 
