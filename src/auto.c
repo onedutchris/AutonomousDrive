@@ -56,9 +56,7 @@
 //implementations
 void auto_init() {
 	taskCreate(localizer, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT);
-	printf("Localizer Task Started \n");
 	taskCreate(driver, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT);
-	printf("Driver Task Started \n");
 
 }
 
