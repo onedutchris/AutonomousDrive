@@ -58,20 +58,23 @@ void operatorControl() {
 	//pinMode(1,OUTPUT);
 	while (1) {
 		motorSet(RIGHT_MOTOR_1_PORT,
-				(joystickGetAnalog(1, 3) - joystickGetAnalog(1, 4)) / 2);
+				(joystickGetAnalog(1, 3) - joystickGetAnalog(1, 4)) );
 		motorSet(RIGHT_MOTOR_2_PORT,
-				-(joystickGetAnalog(1, 3) - joystickGetAnalog(1, 4)) / 2);
+				-(joystickGetAnalog(1, 3) - joystickGetAnalog(1, 4)) );
 
 		motorSet(LEFT_MOTOR_1_PORT,
-				(joystickGetAnalog(1, 3) + joystickGetAnalog(1, 4)) / 2);
+				(joystickGetAnalog(1, 3) + joystickGetAnalog(1, 4)) );
 		motorSet(LEFT_MOTOR_2_PORT,
-				-(joystickGetAnalog(1, 3) + joystickGetAnalog(1, 4)) / 2);
+				-(joystickGetAnalog(1, 3) + joystickGetAnalog(1, 4)) );
 
 		//enable autonomous for testing
 		if (joystickGetDigital(1, 6, 'u') == 1) {
 		  void *d;
 			driver(d);
-		} else if (joystickGetDigital(1, 6, 'u') == 0) {
+		}
+
+		if(joystickGetDigital(1,5,'u')) {
+			initialize_filter();
 		}
 		delay(50);
 	}
