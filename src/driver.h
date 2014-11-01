@@ -15,14 +15,15 @@ struct waypoint {
 	int y;
 	float rotation;
 	int liftHeight;
-	int completed;
+	int clawState;
 };
 
 void driver(void * ignore);
 float calculateRotation(struct Particle * currentLocation, struct waypoint * goalLocation);
-void setRotation(float rotationNeeded);
-void setMovement();
+void setRotation(float rotationNeeded, int speed);
+void setMovement(int speed);
 void setMotors(int leftMotor, int rightMotor);
 int checkComlpeted(struct waypoint * waypoint);
-
+int getLiftHeight();
+int getClawState();
 #endif /* DRIVER_H_ */
