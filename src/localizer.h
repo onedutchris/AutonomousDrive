@@ -15,7 +15,7 @@ struct Particle {
 	float weight;
 };
 
-
+//private
 struct SensorData sense();
 void update_filter(float distance,float rotation);
 float calculateMovement(int leftEncoder, int rightEncoder);
@@ -27,6 +27,8 @@ void initialize_particle(struct Particle * particle, struct Particle * startPos)
 void move_particle(struct Particle * particle, float distance, float direction); //convolute Particles
 void mes_prob_particle(struct Particle * particle); //get measurement probability of Particle
 void localizer(void * ignore);
-struct Particle getWeightedAverage();
+
+//public
+struct Particle Localizer_getWeightedAverage();
 
 #endif /* LOCALIZER_H_ */
