@@ -57,6 +57,7 @@ void operatorControl() {
 
 	//pinMode(1,OUTPUT);
 	while (1) {
+
 		motorSet(RIGHT_MOTOR_1_PORT,
 				(joystickGetAnalog(1, 3) - joystickGetAnalog(1, 4)) );
 		motorSet(RIGHT_MOTOR_2_PORT,
@@ -67,15 +68,30 @@ void operatorControl() {
 		motorSet(LEFT_MOTOR_2_PORT,
 				-(joystickGetAnalog(1, 3) + joystickGetAnalog(1, 4)) );
 
-		//enable autonomous for testing
+		int liftSpeed = joystickGetAnalog(1,2);
+
+		motorSet(LEFT_LIFT_MOTOR_1_PORT,  1 * liftSpeed);
+		motorSet(LEFT_LIFT_MOTOR_2_PORT, -1 * liftSpeed);
+		motorSet(LEFT_LIFT_MOTOR_3_PORT,  1 * liftSpeed);
+
+		motorSet(RIGHT_LIFT_MOTOR_1_PORT,-1 * liftSpeed);
+		motorSet(RIGHT_LIFT_MOTOR_2_PORT, 1 * liftSpeed);
+		motorSet(RIGHT_LIFT_MOTOR_3_PORT,-1 * liftSpeed);
+
+
+		//claw operation
 		if (joystickGetDigital(1, 6, 'u') == 1) {
-		  void *d;
-			driver(d);
+			digitalWrite(CLAW_SOL_PIN,HIGH);
+		}
+		else {
+			digitalWrite(CLAW_SOL_PIN,LOW);
 		}
 
 		if(joystickGetDigital(1,5,'u')) {
 			initialize_filter();
 		}
+
+
 		delay(50);
 	}
 }
