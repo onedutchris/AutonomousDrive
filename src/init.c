@@ -34,7 +34,6 @@
 
 #include "shared.h"
 #include "main.h"
-#include "auto.h"
 
 Ultrasonic leftSonar;
 Ultrasonic rightSonar;
@@ -49,6 +48,7 @@ Gyro gyro;
  * configure a UART port (usartOpen()) but cannot set up an LCD (lcdInit()).
  */
 void initializeIO() {
+	pinMode(CLAW_SOL_PIN,OUTPUT);
 }
 
 /*
@@ -71,6 +71,6 @@ void initialize() {
 	rightSonar = ultrasonicInit(RIGHT_SONAR_PORT,RIGHT_SONAR_PORT+1);
 	gyro = gyroInit(GYRO_PORT,0);
 	int encoder_count = imeInitializeAll();
+	speakerInit();
 	printf("Encoders Initialized: %d \n",encoder_count);
-	auto_init();
 }
