@@ -37,6 +37,7 @@
 
 Ultrasonic leftSonar;
 Ultrasonic rightSonar;
+Encoder liftEncoder;
 Gyro gyro;
 
 /*
@@ -69,8 +70,8 @@ void initialize() {
 	//initialize sensors
 	leftSonar = ultrasonicInit(LEFT_SONAR_PORT,LEFT_SONAR_PORT+1);
 	rightSonar = ultrasonicInit(RIGHT_SONAR_PORT,RIGHT_SONAR_PORT+1);
+    //liftEncoder = encoderInit(1, 2, 0);
 	gyro = gyroInit(GYRO_PORT,0);
 	int encoder_count = imeInitializeAll();
 	speakerInit();
-	printf("Encoders Initialized: %d \n",encoder_count);
 }
