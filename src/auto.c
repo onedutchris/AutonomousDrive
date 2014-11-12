@@ -47,32 +47,13 @@
  */
 #include "main.h"
 #include "shared.h"
-#include "auto.h"
 #include <Math.h>
 #include "localizer.h"
 #include "driver.h"
 
-
-//implementations
-void auto_init() {
+void autonomous() {
 	taskCreate(localizer, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT);
 	taskCreate(driver, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT);
-
 }
 
-void autonomous() {
-	printf("Started Autonomous Task");
-}
-
-void move(int speed, int direction, int turnAngle) {
-	int turnMagnitude = -((abs(turnAngle)-45)/45);
-	if (turnAngle > 0) {
-//		leftMotorValue  = (int)(direction * speed);
-//		rightMotorValue = (int)(direction * speed * turnMagnitude);
-	}
-	else if (turnAngle <= 0){
-//		leftMotorValue  = (int)(direction * speed * turnMagnitude);
-//		rightMotorValue = (int)(direction * speed);
-	}
-}
 
