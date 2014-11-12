@@ -17,6 +17,7 @@
 
 #define TURN_SPEED 30
 #define FORWARD_SPEED 50
+#define PI 3.14
 
 struct waypoint waypoints[] = {
 
@@ -26,11 +27,11 @@ struct waypoint waypoints[] = {
 int currentWaypoint = 0;
 
 void driver(void*ignore) {
+
 	//printf("Driver Task Started \n");
 	struct Particle location = Localizer_getWeightedAverage();
 	float rotationNeeded = calculateRotation(&location, &waypoints[currentWaypoint]);
-
-	printf("Rotation Needed : %f \n",rotationNeeded);
+	//printf("Rotation Needed : %f \n",rotationNeeded);
 
 	//set all motors to 0
 	setRotation(0,0);
@@ -43,10 +44,10 @@ void driver(void*ignore) {
 		setMovement(FORWARD_SPEED);
 	}
 
-	if (abs(getLiftHeight() - waypoints[currentWaypoint].liftHeight) > LIFT_HEIGHT_LEEWAY) {
+	if (abs(Localizer_getLiftHeight() - waypoints[currentWaypoint].liftHeight) > LIFT_HEIGHT_LEEWAY) {
 
 	}
-	else if(abs(getClawState - waypoints[currentWaypoint].clawState)) {
+	else if(abs(Localizer_getClawState - waypoints[currentWaypoint].clawState)) {
 
 	}
 
@@ -81,12 +82,3 @@ void setMotors(int leftSide, int rightSide) {
 	motorSet(RIGHT_MOTOR_2_PORT, -rightSide);
 
 }
-
-int getLiftHeight() {
-
-}
-
-int getClawState() {
-
-}
-
