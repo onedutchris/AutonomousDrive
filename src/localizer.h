@@ -30,5 +30,7 @@ void localizer(void * ignore);
 
 //public
 struct Particle Localizer_getWeightedAverage();
+int Localizer_getLiftHeight();
+int Localizer_getClawState();
 
 #endif /* LOCALIZER_H_ */

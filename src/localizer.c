@@ -27,6 +27,7 @@ struct line {
 struct SensorData {
 	int leftEncoder;
 	int rightEncoder;
+	int liftEncoder;
 	int leftSonar;
 	int rightSonar;
 	int lineTracker1;
@@ -40,6 +41,7 @@ struct SensorData {
 extern Ultrasonic leftSonar;
 extern Ultrasonic rightSonar;
 extern Gyro gyro;
+//extern Encoder liftEncoder;
 
 //sensor constants
 #define ULTRASONIC_NOISE 0.5
@@ -50,6 +52,7 @@ extern Gyro gyro;
 //movement constants
 #define MOVE_PER_TICK 0.03757f // (18/24 * 10 * PI) / 627.1
 #define ROBOT_WIDTH 10.0f
+#define DEGREES_TO_RADIANS 0.01745f
 
 //map data - no grid map because that's too large
 #define NUM_LINES 8
@@ -58,19 +61,16 @@ const struct cube cubes[NUM_CUBES];
 const struct line lines[NUM_LINES];
 #define MAP_SIZE 100
 struct Particle start_position = {.x = 0, .y = 0, .heading = 0};
+int start_clawStatus = 1;
+int start_liftHeight = 0;
+float cm_per_tick = 0.0903; //in cm per encoder tick
 
 //Particles
 #define NUM_PARTICLES 100
 struct Particle particles[NUM_PARTICLES];
 struct SensorData sensorValues;
 float moveDistance;
-/*//sensor and motor data
- int leftSonarValue;
- int rightSonarValue;
 
- int leftMotorValue;
- int rightMotorValue;
- */
 
 //filter parameters
 
@@ -89,14 +89,13 @@ void localizer(void* ignore) {
 
 	//delay to allow calibrations
 	delay(2000);
-	imeReset(LEFT_MOTOR_IME);
-	imeReset(RIGHT_MOTOR_IME);
 	while (1) {
 		sensorValues = sense();
 		moveDistance = calculateMovement(sensorValues.leftEncoder,sensorValues.rightEncoder);
+		//update_state(sensorValues.liftEncoder);
 		update_filter(moveDistance, sensorValues.gyro);
 
-		//printf("Encoder: %d, %d \n", sensorValues.leftEncoder, sensorValues.rightEncoder);
+		printf("Encoder: %d \n", sensorValues.liftEncoder);
 		//printf("Movement Forward: %f \n",moveDistance);
 		//printf("Gyro: %f \n", sensorValues.gyro);
 		//printf("Particle1: X is %d, Y is %d, Theta is %f \n", particles[1].x,particles[1].y,particles[1].heading);
@@ -114,7 +113,9 @@ void update_filter(float distance, float rotation) {
 	}
 
 	//update the weights
-	//weights = mes_prob_particles(Particles);
+	for (int i = 0; i< NUM_PARTICLES; i++) {
+		//mes_prob_particle(&particles[i], distance, rotation);
+	}
 
 	//resample Particles
 	//Particles = resample_particles(Particles);
@@ -127,7 +128,9 @@ struct SensorData sense() {
 	values.gyro = -1 * gyroGet(gyro) * DEGREES_TO_RADIANS;
 	values.leftSonar = ultrasonicGet(leftSonar);
 	values.rightSonar = ultrasonicGet(rightSonar);
+	//values.liftEncoder = encoderGet(liftEncoder);
 
+	//encoderReset(liftEncoder);
 	imeReset(LEFT_MOTOR_IME);
 	imeReset(RIGHT_MOTOR_IME);
 	gyroReset(gyro);
@@ -211,5 +214,15 @@ struct Particle Localizer_getWeightedAverage(){
 
 	return average;
 }
+
+int Localizer_getLiftHeight() {
+
+}
+
+int Localizer_getClawState() {
+
+}
+
+
 
 #endif /* LOCALIZER_C_ */
