@@ -31,11 +31,6 @@
  * Purdue Robotics OS contains FreeRTOS (http://www.freertos.org) whose source code may be
  * obtained from http://sourceforge.net/projects/freertos/files/ or on request.
  */
-
-#include "shared.h"
-#include "main.h"
-#include "driver.h"
-
 /*
  * Runs the user operator control code. This function will be started in its own task with the
  * default priority and stack size whenever the robot is enabled via the Field Management System
@@ -53,33 +48,32 @@
  *
  * This task should never exit; it should end with some kind of infinite loop, even if empty.
  */
+
+#include "shared.h"
+#include "main.h"
+#include "driver.h"
+
 void operatorControl() {
 
 	//pinMode(1,OUTPUT);
 	while (1) {
 
-		motorSet(RIGHT_MOTOR_1_PORT,
-				(joystickGetAnalog(1, 3) - joystickGetAnalog(1, 4)) );
-		motorSet(RIGHT_MOTOR_2_PORT,
-				-(joystickGetAnalog(1, 3) - joystickGetAnalog(1, 4)) );
+		//Drive Motors Control
+		motorSet(RIGHT_MOTOR_1_PORT,(joystickGetAnalog(1, 3) - joystickGetAnalog(1, 4)) );
+		motorSet(RIGHT_MOTOR_2_PORT,(joystickGetAnalog(1, 3) - joystickGetAnalog(1, 4)) );
+		motorSet(LEFT_MOTOR_1_PORT,-(joystickGetAnalog(1, 3) + joystickGetAnalog(1, 4)) );
+		motorSet(LEFT_MOTOR_2_PORT,-(joystickGetAnalog(1, 3) + joystickGetAnalog(1, 4)) );
 
-		motorSet(LEFT_MOTOR_1_PORT,
-				(joystickGetAnalog(1, 3) + joystickGetAnalog(1, 4)) );
-		motorSet(LEFT_MOTOR_2_PORT,
-				-(joystickGetAnalog(1, 3) + joystickGetAnalog(1, 4)) );
-
+		//Lift Motors Control
 		int liftSpeed = joystickGetAnalog(1,2);
-
 		motorSet(LEFT_LIFT_MOTOR_1_PORT,  1 * liftSpeed);
 		motorSet(LEFT_LIFT_MOTOR_2_PORT, -1 * liftSpeed);
 		motorSet(LEFT_LIFT_MOTOR_3_PORT,  1 * liftSpeed);
-
 		motorSet(RIGHT_LIFT_MOTOR_1_PORT,-1 * liftSpeed);
 		motorSet(RIGHT_LIFT_MOTOR_2_PORT, 1 * liftSpeed);
 		motorSet(RIGHT_LIFT_MOTOR_3_PORT,-1 * liftSpeed);
 
-
-		//claw operation
+		//Claw Control
 		if (joystickGetDigital(1, 6, 'u') == 1) {
 			digitalWrite(CLAW_SOL_PIN,HIGH);
 		}
@@ -87,6 +81,7 @@ void operatorControl() {
 			digitalWrite(CLAW_SOL_PIN,LOW);
 		}
 
+		//Autonomous Testing
 		if(joystickGetDigital(1,5,'u')) {
 			initialize_filter();
 		}
