@@ -17,6 +17,7 @@
 
 #define TURN_SPEED 30
 #define FORWARD_SPEED 50
+#define LIFT_SPEED 128
 #define PI 3.14
 
 struct waypoint waypoints[] = {
@@ -45,7 +46,7 @@ void driver(void*ignore) {
 	}
 
 	if (abs(Localizer_getLiftHeight() - waypoints[currentWaypoint].liftHeight) > LIFT_HEIGHT_LEEWAY) {
-
+		setLift(LIFT_SPEED);
 	}
 	else if(abs(Localizer_getClawState - waypoints[currentWaypoint].clawState)) {
 
@@ -55,11 +56,19 @@ void driver(void*ignore) {
 	delay(50);
 }
 
-float calculateRotation(struct Particle * currentLocation,
-		struct waypoint * goalLocation) {
+float calculateRotation(struct Particle * currentLocation, struct waypoint * goalLocation) {
 	int dY = goalLocation->y - currentLocation->y;
 	int dX = goalLocation->x - currentLocation->x;
 	return (PI / 2 - atan2(dY, dX) - currentLocation->heading);
+}
+
+void setLift(int speed) {
+	motorSet(LEFT_LIFT_MOTOR_1_PORT,  1 * speed);
+	motorSet(LEFT_LIFT_MOTOR_2_PORT, -1 * speed);
+	motorSet(LEFT_LIFT_MOTOR_3_PORT,  1 * speed);
+	motorSet(RIGHT_LIFT_MOTOR_1_PORT,-1 * speed);
+	motorSet(RIGHT_LIFT_MOTOR_2_PORT, 1 * speed);
+	motorSet(RIGHT_LIFT_MOTOR_3_PORT,-1 * speed);
 }
 
 void setMovement(int speed) {
@@ -67,18 +76,17 @@ void setMovement(int speed) {
 }
 void setRotation(float rotationNeeded, int speed) {
 	if (rotationNeeded < 0) {
-		setMotors(-speed, speed);
+		setDriveMotors(-speed, speed);
 	} else {
-		setMotors(speed, -speed);
+		setDriveMotors(speed, -speed);
 	}
 }
 
-void setMotors(int leftSide, int rightSide) {
+void setDriveMotors(int leftSide, int rightSide) {
 //TODO: PID Control
 	motorSet(LEFT_MOTOR_1_PORT, leftSide);
 	motorSet(LEFT_MOTOR_2_PORT, -leftSide);
 
 	motorSet(RIGHT_MOTOR_1_PORT, rightSide);
 	motorSet(RIGHT_MOTOR_2_PORT, -rightSide);
-
 }
