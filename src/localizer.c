@@ -61,7 +61,6 @@ const struct cube cubes[NUM_CUBES];
 const struct line lines[NUM_LINES];
 #define MAP_SIZE 100
 
-const int LOCALIZER_START_POS = 1;
 struct Particle START_POSITIONS[] = {
 		{.x = 0, .y = 0, .heading = 0},
 		{.x = 0, .y = 0, .heading = 0},
@@ -85,7 +84,7 @@ float moveDistance;
 void initialize_filter() {
 	//initialize particles
 	for (int i = 0; i < NUM_PARTICLES; i++) {
-		initialize_particle(&particles[i], &START_POSITIONS[LOCALIZER_START_POS]);
+		initialize_particle(&particles[i], &START_POSITIONS[ROBOT_START_POS]);
 	}
 
 }
