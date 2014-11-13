@@ -24,7 +24,7 @@ void setRotation(float rotationNeeded, int speed);
 void setMovement(int speed);
 void setDriveMotors(int leftMotor, int rightMotor);
 void setLift(int speed);
+void setClaw(int state);
 int checkComlpeted(struct waypoint * waypoint);
-int getLiftHeight();
-int getClawState();
+
 #endif /* DRIVER_H_ */

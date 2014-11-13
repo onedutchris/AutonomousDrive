@@ -48,8 +48,8 @@ void driver(void*ignore) {
 	if (abs(Localizer_getLiftHeight() - waypoints[currentWaypoint].liftHeight) > LIFT_HEIGHT_LEEWAY) {
 		setLift(LIFT_SPEED);
 	}
-	else if(abs(Localizer_getClawState - waypoints[currentWaypoint].clawState)) {
-
+	else {
+		setClaw(waypoints[currentWaypoint].liftHeight);
 	}
 
 	//checkComlpeted(&waypoints[currentTask]);
@@ -79,7 +79,6 @@ void setClaw(int state) {
 	//closed
 	if (state==0) {
 		digitalWrite(CLAW_SOL_PIN,LOW);
-
 	}
 }
 
