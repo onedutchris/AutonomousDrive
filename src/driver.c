@@ -72,7 +72,7 @@ void setLift(int speed) {
 }
 
 void setMovement(int speed) {
-	setMotors(speed, speed);
+	setDriveMotors(speed, speed);
 }
 void setRotation(float rotationNeeded, int speed) {
 	if (rotationNeeded < 0) {

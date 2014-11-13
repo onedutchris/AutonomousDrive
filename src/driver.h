@@ -23,6 +23,7 @@ float calculateRotation(struct Particle * currentLocation, struct waypoint * goa
 void setRotation(float rotationNeeded, int speed);
 void setMovement(int speed);
 void setDriveMotors(int leftMotor, int rightMotor);
+void setLift(int speed);
 int checkComlpeted(struct waypoint * waypoint);
 int getLiftHeight();
 int getClawState();
