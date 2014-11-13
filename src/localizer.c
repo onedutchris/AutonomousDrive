@@ -61,9 +61,8 @@ const struct cube cubes[NUM_CUBES];
 const struct line lines[NUM_LINES];
 #define MAP_SIZE 100
 struct Particle start_position = {.x = 0, .y = 0, .heading = 0};
-int start_clawStatus = 1;
-int start_liftHeight = 0;
-float cm_per_tick = 0.0903; //in cm per encoder tick
+float liftHeight = 0;
+float cm_per_tick = 0.0903; //in cm per encoder tick for lift
 
 //Particles
 #define NUM_PARTICLES 100
@@ -86,16 +85,15 @@ void initialize_filter() {
 void localizer(void* ignore) {
 	printf("Started Localizer Task");
 	initialize_filter();
-
 	//delay to allow calibrations
 	delay(2000);
+
 	while (1) {
 		sensorValues = sense();
 		moveDistance = calculateMovement(sensorValues.leftEncoder,sensorValues.rightEncoder);
-		//update_state(sensorValues.liftEncoder);
+		update_state(sensorValues.liftEncoder);
 		update_filter(moveDistance, sensorValues.gyro);
-
-		printf("Encoder: %d \n", sensorValues.liftEncoder);
+		//printf("Encoder: %d \n", sensorValues.liftEncoder);
 		//printf("Movement Forward: %f \n",moveDistance);
 		//printf("Gyro: %f \n", sensorValues.gyro);
 		//printf("Particle1: X is %d, Y is %d, Theta is %f \n", particles[1].x,particles[1].y,particles[1].heading);
@@ -119,6 +117,10 @@ void update_filter(float distance, float rotation) {
 
 	//resample Particles
 	//Particles = resample_particles(Particles);
+}
+
+void update_state(int liftEncoderValue) {
+
 }
 
 struct SensorData sense() {
@@ -216,13 +218,7 @@ struct Particle Localizer_getWeightedAverage(){
 }
 
 int Localizer_getLiftHeight() {
-
+	//return
 }
-
-int Localizer_getClawState() {
-
-}
-
-
 
 #endif /* LOCALIZER_C_ */

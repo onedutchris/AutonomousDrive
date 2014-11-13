@@ -27,10 +27,10 @@ void initialize_particle(struct Particle * particle, struct Particle * startPos)
 void move_particle(struct Particle * particle, float distance, float direction); //convolute Particles
 void mes_prob_particle(struct Particle * particle); //get measurement probability of Particle
 void localizer(void * ignore);
+void update_state(int liftEncoder);
 
 //public
 struct Particle Localizer_getWeightedAverage();
 int Localizer_getLiftHeight();
-int Localizer_getClawState();
 
 #endif /* LOCALIZER_H_ */
