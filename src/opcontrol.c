@@ -59,10 +59,10 @@ void operatorControl() {
 	while (1) {
 
 		//Drive Motors Control
-		motorSet(RIGHT_MOTOR_1_PORT,(joystickGetAnalog(1, 3) - joystickGetAnalog(1, 4)) );
-		motorSet(RIGHT_MOTOR_2_PORT,(joystickGetAnalog(1, 3) - joystickGetAnalog(1, 4)) );
-		motorSet(LEFT_MOTOR_1_PORT,-(joystickGetAnalog(1, 3) + joystickGetAnalog(1, 4)) );
-		motorSet(LEFT_MOTOR_2_PORT,-(joystickGetAnalog(1, 3) + joystickGetAnalog(1, 4)) );
+		motorSet(RIGHT_MOTOR_1_PORT,(-joystickGetAnalog(1, 3) - joystickGetAnalog(1, 4)) );
+		motorSet(RIGHT_MOTOR_2_PORT,(-joystickGetAnalog(1, 3) - joystickGetAnalog(1, 4)) );
+		motorSet(LEFT_MOTOR_1_PORT,-(-joystickGetAnalog(1, 3) + joystickGetAnalog(1, 4)) );
+		motorSet(LEFT_MOTOR_2_PORT,-(-joystickGetAnalog(1, 3) + joystickGetAnalog(1, 4)) );
 
 		//Lift Motors Control
 		int liftSpeed = joystickGetAnalog(1,2);
