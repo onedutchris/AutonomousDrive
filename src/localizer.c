@@ -60,7 +60,15 @@ extern Gyro gyro;
 const struct cube cubes[NUM_CUBES];
 const struct line lines[NUM_LINES];
 #define MAP_SIZE 100
-struct Particle start_position = {.x = 0, .y = 0, .heading = 0};
+
+const int LOCALIZER_START_POS = 1;
+struct Particle START_POSITIONS[] = {
+		{.x = 0, .y = 0, .heading = 0},
+		{.x = 0, .y = 0, .heading = 0},
+		{.x = 0, .y = 0, .heading = 0},
+		{.x = 0, .y = 0, .heading = 0}
+
+};
 float liftHeight = 0;
 float cm_per_tick = 0.0903; //in cm per encoder tick for lift
 
@@ -77,7 +85,7 @@ float moveDistance;
 void initialize_filter() {
 	//initialize particles
 	for (int i = 0; i < NUM_PARTICLES; i++) {
-		initialize_particle(&particles[i], &start_position);
+		initialize_particle(&particles[i], &START_POSITIONS[LOCALIZER_START_POS]);
 	}
 
 }
@@ -85,6 +93,7 @@ void initialize_filter() {
 void localizer(void* ignore) {
 	printf("Started Localizer Task");
 	initialize_filter();
+
 	//delay to allow calibrations
 	delay(2000);
 
