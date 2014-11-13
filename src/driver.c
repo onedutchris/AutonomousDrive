@@ -71,6 +71,18 @@ void setLift(int speed) {
 	motorSet(RIGHT_LIFT_MOTOR_3_PORT,-1 * speed);
 }
 
+void setClaw(int state) {
+	//opened
+	if (state == 1) {
+		digitalWrite(CLAW_SOL_PIN,HIGH);
+	}
+	//closed
+	if (state==0) {
+		digitalWrite(CLAW_SOL_PIN,LOW);
+
+	}
+}
+
 void setMovement(int speed) {
 	setDriveMotors(speed, speed);
 }
