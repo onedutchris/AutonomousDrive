@@ -29,7 +29,9 @@ int currentWaypoint = 0;
 
 void driver(void*ignore) {
 
-	//printf("Driver Task Started \n");
+	printf("Driver Task Started \n");
+
+	while(1) {
 	struct Particle location = Localizer_getWeightedAverage();
 	float rotationNeeded = calculateRotation(&location, &waypoints[currentWaypoint]);
 	//printf("Rotation Needed : %f \n",rotationNeeded);
@@ -38,22 +40,29 @@ void driver(void*ignore) {
 	setRotation(0,0);
 	setMovement(0);
 
+	bool completed = true;
+
 	if (fabsf(rotationNeeded) > ROTATION_LEEWAY) {
 		setRotation(rotationNeeded, TURN_SPEED);
+		completed = false;
 	}
 	else if (abs(location.x - waypoints[currentWaypoint].x) > LOCATION_LEEWAY) {
 		setMovement(FORWARD_SPEED);
+		completed = false;
 	}
 
 	if (abs(Localizer_getLiftHeight() - waypoints[currentWaypoint].liftHeight) > LIFT_HEIGHT_LEEWAY) {
 		setLift(LIFT_SPEED);
+		completed = false;
 	}
 	else {
 		setClaw(waypoints[currentWaypoint].liftHeight);
 	}
 
-	//checkComlpeted(&waypoints[currentTask]);
-	delay(50);
+	if (completed) {
+		currentWaypoint++;
+	}
+	delay(50); }
 }
 
 float calculateRotation(struct Particle * currentLocation, struct waypoint * goalLocation) {
