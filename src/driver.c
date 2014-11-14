@@ -9,20 +9,26 @@
 #include "localizer.h"
 #include <math.h>
 #include "driver.h"
-#include "shared.h"
 
 #define ROTATION_LEEWAY 0.2f
+#define HEADING_LEEWAY 0.2f
 #define LOCATION_LEEWAY 3
 #define LIFT_HEIGHT_LEEWAY 10
 
-#define TURN_SPEED 30
-#define FORWARD_SPEED 50
+#define TURN_SPEED 40
+#define FORWARD_SPEED 70
 #define LIFT_SPEED 128
 #define PI 3.14
 
 struct waypoint waypoints[] = {
 
-		{ .x = 0, .y = 1000, .rotation = 6.28f}
+		{.x = 0, .y = 100, .heading = 6.28f, .liftHeight = 0, .clawState = 1}//,
+		///{.x = 0, .y = 0, .heading = 6.28f, .liftHeight = 100, .clawState = 0},
+		//{.x = 0, .y = 1000, .heading = 6.28f, .liftHeight = 10, .clawState = 1},
+		//{.x = 0, .y = 1000, .heading = 6.28f, .liftHeight = 10, .clawState = 1},
+		//{.x = 0, .y = 1000, .heading = 6.28f, .liftHeight = 10, .clawState = 1},
+		//{.x = 0, .y = 1000, .heading = 6.28f, .liftHeight = 10, .clawState = 1}
+
 };
 int currentWaypoint = 0;
 
@@ -45,19 +51,22 @@ void driver(void*ignore) {
 */
 	while(1) {
 
-		if(!isAutonomous()){
+	if(!isAutonomous()){
 			taskDelete(NULL); //exit this task if not in autonomous
-		}
+	}
 
 	struct Particle location = Localizer_getWeightedAverage();
 	float rotationNeeded = calculateRotation(&location, &waypoints[currentWaypoint]);
-	//printf("Rotation Needed : %f \n",rotationNeeded);
 
 	//set all motors to 0
 	setRotation(0,0);
 	setMovement(0);
+	setLift(0);
 
 	bool completed = true;
+
+	printf("Weighted Average: X is %d, Y is %d, Theta is %f, LiftHeight is %d \n",location.x,location.y,location.heading, Localizer_getLiftHeight());
+
 
 	if (fabsf(rotationNeeded) > ROTATION_LEEWAY) {
 		setRotation(rotationNeeded, TURN_SPEED);
@@ -67,13 +76,17 @@ void driver(void*ignore) {
 		setMovement(FORWARD_SPEED);
 		completed = false;
 	}
+	else if(fabsf(location.heading - waypoints[currentWaypoint].heading)>HEADING_LEEWAY){
+		setRotation(location.heading - waypoints[currentWaypoint].heading,TURN_SPEED);
+	}
 
-	if (abs(Localizer_getLiftHeight() - waypoints[currentWaypoint].liftHeight) > LIFT_HEIGHT_LEEWAY) {
-		//setLift(LIFT_SPEED);
+	else if (abs(Localizer_getLiftHeight() - waypoints[currentWaypoint].liftHeight) > LIFT_HEIGHT_LEEWAY) {
+		setLift(LIFT_SPEED);
 		completed = false;
 	}
 	else {
-		setClaw(waypoints[currentWaypoint].liftHeight);
+		setClaw(waypoints[currentWaypoint].clawState);
+		completed = true;
 	}
 
 	if (completed) {
@@ -122,8 +135,8 @@ void setRotation(float rotationNeeded, int speed) {
 void setDriveMotors(int leftSide, int rightSide) {
 //TODO: PID Control
 	motorSet(LEFT_MOTOR_1_PORT, leftSide);
-	motorSet(LEFT_MOTOR_2_PORT, -leftSide);
+	motorSet(LEFT_MOTOR_2_PORT, leftSide);
 
-	motorSet(RIGHT_MOTOR_1_PORT, rightSide);
+	motorSet(RIGHT_MOTOR_1_PORT, -rightSide);
 	motorSet(RIGHT_MOTOR_2_PORT, -rightSide);
 }
