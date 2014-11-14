@@ -22,16 +22,33 @@
 
 struct waypoint waypoints[] = {
 
-{ .x = 0, .y = 1000, .rotation = 6.28f }
-
+		{ .x = 0, .y = 1000, .rotation = 6.28f}
 };
 int currentWaypoint = 0;
 
 void driver(void*ignore) {
-
 	printf("Driver Task Started \n");
 
+	//change routine based upons start position
+	/*switch(ROBOT_START_POS) {
+	case 1:
+		break;
+	case 2:
+		break;
+	case 3:
+		break;
+	case 4:
+		break;
+	default:
+		break;
+	}
+*/
 	while(1) {
+
+		if(!isAutonomous()){
+			taskDelete(NULL); //exit this task if not in autonomous
+		}
+
 	struct Particle location = Localizer_getWeightedAverage();
 	float rotationNeeded = calculateRotation(&location, &waypoints[currentWaypoint]);
 	//printf("Rotation Needed : %f \n",rotationNeeded);
@@ -52,7 +69,7 @@ void driver(void*ignore) {
 	}
 
 	if (abs(Localizer_getLiftHeight() - waypoints[currentWaypoint].liftHeight) > LIFT_HEIGHT_LEEWAY) {
-		setLift(LIFT_SPEED);
+		//setLift(LIFT_SPEED);
 		completed = false;
 	}
 	else {
