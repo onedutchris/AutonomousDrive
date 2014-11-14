@@ -8,6 +8,9 @@
 #ifndef SHARED_H_
 #define SHARED_H_
 
+#define ROBOT_START_POS 1
+
+
 #define LEFT_MOTOR_1_PORT 4
 #define RIGHT_MOTOR_1_PORT 6
 #define LEFT_MOTOR_2_PORT 5
@@ -25,13 +28,13 @@
 
 #define LEFT_MOTOR_IME 0
 #define RIGHT_MOTOR_IME 1
-#define LIFT_ENCODER_TOP 1
+#define LIFT_ENCODER_TOP 3
 #define LIFT_ENCODER_BOTTOM 2
 
 
 #define LEFT_SONAR_PORT 8
 #define RIGHT_SONAR_PORT 5
-#define GYRO_PORT 2
+#define GYRO_PORT 1
 
 #define PI 3.14
 
