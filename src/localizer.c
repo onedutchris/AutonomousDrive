@@ -93,10 +93,12 @@ void localizer(void* ignore) {
 	printf("Started Localizer Task");
 	initialize_filter();
 
-	//delay to allow calibrations
-	delay(2000);
-
 	while (1) {
+
+		if(!isAutonomous()){
+					taskDelete(NULL); //exit this task if not in autonomous
+		}
+
 		sensorValues = sense();
 		moveDistance = calculateMovement(sensorValues.leftEncoder,sensorValues.rightEncoder);
 		update_state(sensorValues.liftEncoder);
