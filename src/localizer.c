@@ -41,7 +41,7 @@ struct SensorData {
 extern Ultrasonic leftSonar;
 extern Ultrasonic rightSonar;
 extern Gyro gyro;
-//extern Encoder liftEncoder;
+extern Encoder liftEncoder;
 
 //sensor constants
 #define ULTRASONIC_NOISE 0.5
@@ -62,7 +62,7 @@ const struct line lines[NUM_LINES];
 #define MAP_SIZE 100
 
 struct Particle START_POSITIONS[] = {
-		{.x = 0, .y = 0, .heading = 0},
+		{.x = 10, .y = 10, .heading = 0 },
 		{.x = 0, .y = 0, .heading = 0},
 		{.x = 0, .y = 0, .heading = 0},
 		{.x = 0, .y = 0, .heading = 0}
@@ -106,6 +106,7 @@ void localizer(void* ignore) {
 		//printf("Gyro: %f \n", sensorValues.gyro);
 		//printf("Particle1: X is %d, Y is %d, Theta is %f \n", particles[1].x,particles[1].y,particles[1].heading);
 		//printf("Particle2: X is %d, Y is %d, Theta is %f \n\n", particles[2].x,particles[2].y,particles[2].heading);
+		//struct Particle avg= Localizer_getWeightedAverage();
 		//printf("Weighted Average: X is %d, Y is %d, Theta is %f \n",avg.x,avg.y,avg.heading);
 		delay(30);
 	}
@@ -138,7 +139,7 @@ struct SensorData sense() {
 	values.gyro = -1 * gyroGet(gyro) * DEGREES_TO_RADIANS;
 	values.leftSonar = ultrasonicGet(leftSonar);
 	values.rightSonar = ultrasonicGet(rightSonar);
-	//values.liftEncoder = encoderGet(liftEncoder);
+	values.liftEncoder = encoderGet(liftEncoder);
 
 	//encoderReset(liftEncoder);
 	imeReset(LEFT_MOTOR_IME);
