@@ -81,11 +81,6 @@ void operatorControl() {
 			digitalWrite(CLAW_SOL_PIN,LOW);
 		}
 
-		//Autonomous Testing
-		if(joystickGetDigital(1,5,'u')) {
-			initialize_filter();
-		}
-
 
 		delay(50);
 	}
