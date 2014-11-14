@@ -13,7 +13,7 @@
 struct waypoint {
 	int x;
 	int y;
-	float rotation;
+	float heading;
 	int liftHeight;
 	int clawState;
 };
