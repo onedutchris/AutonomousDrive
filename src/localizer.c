@@ -103,7 +103,6 @@ void localizer(void* ignore) {
 		moveDistance = calculateMovement(sensorValues.leftEncoder,sensorValues.rightEncoder);
 		update_state(sensorValues.liftEncoder);
 		update_filter(moveDistance, sensorValues.gyro);
-		printf("Encoder: %d \n", sensorValues.liftEncoder);
 		//printf("Movement Forward: %f \n",moveDistance);
 		//printf("Gyro: %f \n", sensorValues.gyro);
 		//printf("Particle1: X is %d, Y is %d, Theta is %f \n", particles[1].x,particles[1].y,particles[1].heading);
@@ -164,8 +163,6 @@ void move_particle(struct Particle * particle, float distance, float direction) 
 	particle->x += sin(newHeading) * distance;
 	particle->y += cos(newHeading) * distance;
 	particle->heading = fmodf(newHeading, (2 * PI)); //keep within -2pi to 2pi
-	//printf("direction: %f, oldParticleHeading: newHeading: %f",direction,newHeading,particle->heading);
-
 }
 
 void mes_prob_particle(struct Particle * particle) {
@@ -179,13 +176,6 @@ float calculateMovement(int leftEncoderValue, int rightEncoderValue) {
 	float SR = rightEncoderValue * MOVE_PER_TICK;
 	float meanS = (SL + SR) / 2;
 	return meanS;
-	//float theta = (SL - SR) / ROBOT_WIDTH;
-	//translation.heading = theta;
-	//translation.x = meanS * cos(theta);
-	//translation.y = meanS * sin(theta);
-	//return translation;
-	//distance = (left_encoder + right_encoder) / 2.0
-	//(2)	theta = (left_encoder - right_encoder) / WHEEL_BASE;
 }
 
 float gaussianNoise (int mu, int sigma) {
