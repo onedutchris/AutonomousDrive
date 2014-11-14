@@ -103,7 +103,7 @@ void localizer(void* ignore) {
 		moveDistance = calculateMovement(sensorValues.leftEncoder,sensorValues.rightEncoder);
 		update_state(sensorValues.liftEncoder);
 		update_filter(moveDistance, sensorValues.gyro);
-		//printf("Encoder: %d \n", sensorValues.liftEncoder);
+		printf("Encoder: %d \n", sensorValues.liftEncoder);
 		//printf("Movement Forward: %f \n",moveDistance);
 		//printf("Gyro: %f \n", sensorValues.gyro);
 		//printf("Particle1: X is %d, Y is %d, Theta is %f \n", particles[1].x,particles[1].y,particles[1].heading);
@@ -131,7 +131,7 @@ void update_filter(float distance, float rotation) {
 }
 
 void update_state(int liftEncoderValue) {
-
+	liftHeight += liftEncoderValue * cm_per_tick;
 }
 
 struct SensorData sense() {
@@ -143,7 +143,7 @@ struct SensorData sense() {
 	values.rightSonar = ultrasonicGet(rightSonar);
 	values.liftEncoder = encoderGet(liftEncoder);
 
-	//encoderReset(liftEncoder);
+	encoderReset(liftEncoder);
 	imeReset(LEFT_MOTOR_IME);
 	imeReset(RIGHT_MOTOR_IME);
 	gyroReset(gyro);
@@ -229,7 +229,7 @@ struct Particle Localizer_getWeightedAverage(){
 }
 
 int Localizer_getLiftHeight() {
-	//return
+	return liftHeight;
 }
 
 #endif /* LOCALIZER_C_ */
