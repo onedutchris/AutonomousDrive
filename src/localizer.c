@@ -72,7 +72,7 @@ float liftHeight = 0;
 float cm_per_tick = 0.0903; //in cm per encoder tick for lift
 
 //Particles
-#define NUM_PARTICLES 100
+#define NUM_PARTICLES 10
 struct Particle particles[NUM_PARTICLES];
 struct SensorData sensorValues;
 float moveDistance;
