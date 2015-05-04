@@ -52,6 +52,7 @@
 #include "driver.h"
 
 void autonomous() {
+	//create the tasks for autonomous and driver control periods
 	taskCreate(localizer, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT);
 	taskCreate(driver, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT);
 }
