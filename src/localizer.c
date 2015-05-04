@@ -62,7 +62,7 @@ const struct line lines[NUM_LINES];
 #define MAP_SIZE 100
 
 struct Particle START_POSITIONS[] = {
-		{.x = 10, .y = 10, .heading = 0 },
+		{.x = 0, .y = 0, .heading = 0 },
 		{.x = 0, .y = 0, .heading = 0},
 		{.x = 0, .y = 0, .heading = 0},
 		{.x = 0, .y = 0, .heading = 0}
@@ -93,6 +93,10 @@ void localizer(void* ignore) {
 	printf("Started Localizer Task");
 	initialize_filter();
 
+	encoderReset(liftEncoder);
+	imeReset(LEFT_MOTOR_IME);
+	imeReset(RIGHT_MOTOR_IME);
+
 	while (1) {
 
 		if(!isAutonomous()){
@@ -103,16 +107,11 @@ void localizer(void* ignore) {
 		moveDistance = calculateMovement(sensorValues.leftEncoder,sensorValues.rightEncoder);
 		update_state(sensorValues.liftEncoder);
 		update_filter(moveDistance, sensorValues.gyro);
-		//printf("Movement Forward: %f \n",moveDistance);
-		//printf("Gyro: %f \n", sensorValues.gyro);
-		//printf("Particle1: X is %d, Y is %d, Theta is %f \n", particles[1].x,particles[1].y,particles[1].heading);
-		//printf("Particle2: X is %d, Y is %d, Theta is %f \n\n", particles[2].x,particles[2].y,particles[2].heading);
-		//struct Particle avg= Localizer_getWeightedAverage();
-		//printf("Weighted Average: X is %d, Y is %d, Theta is %f \n",avg.x,avg.y,avg.heading);
 		delay(30);
 	}
 }
 
+//TODO: weight updating method and resampling method
 void update_filter(float distance, float rotation) {
 
 	//move Particles
