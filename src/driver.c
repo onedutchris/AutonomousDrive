@@ -19,11 +19,14 @@
 #define FORWARD_SPEED 70
 #define LIFT_SPEED 128
 #define PI 3.14
+#define NUM_WAYPOINTS 4
 
-struct waypoint waypoints[] = {
+struct waypoint waypoints[NUM_WAYPOINTS] = {
 
-		{.x = 0, .y = 100, .heading = 6.28f, .liftHeight = 0, .clawState = 1}//,
-		///{.x = 0, .y = 0, .heading = 6.28f, .liftHeight = 100, .clawState = 0},
+		//waypoints for the robot to head to
+		//TODO: record different waypoints on field
+		{.x = 40, .y = 0, .heading = 0.0f, .liftHeight = 20, .clawState = 1}//,
+		//{.x = 0, .y = 0, .heading = 6.28f, .liftHeight = 100, .clawState = 0},
 		//{.x = 0, .y = 1000, .heading = 6.28f, .liftHeight = 10, .clawState = 1},
 		//{.x = 0, .y = 1000, .heading = 6.28f, .liftHeight = 10, .clawState = 1},
 		//{.x = 0, .y = 1000, .heading = 6.28f, .liftHeight = 10, .clawState = 1},
@@ -36,7 +39,7 @@ void driver(void*ignore) {
 	printf("Driver Task Started \n");
 
 	//change routine based upons start position
-	/*switch(ROBOT_START_POS) {
+	switch(ROBOT_START_POS) {
 	case 1:
 		break;
 	case 2:
@@ -48,8 +51,8 @@ void driver(void*ignore) {
 	default:
 		break;
 	}
-*/
-	while(1) {
+
+	while(currentWaypoint<NUM_WAYPOINTS) {
 
 	if(!isAutonomous()){
 			taskDelete(NULL); //exit this task if not in autonomous
@@ -58,7 +61,6 @@ void driver(void*ignore) {
 	struct Particle location = Localizer_getWeightedAverage();
 	float rotationNeeded = calculateRotation(&location, &waypoints[currentWaypoint]);
 
-	//set all motors to 0
 	setRotation(0,0);
 	setMovement(0);
 	setLift(0);
@@ -66,6 +68,7 @@ void driver(void*ignore) {
 	bool completed = true;
 
 	printf("Weighted Average: X is %d, Y is %d, Theta is %f, LiftHeight is %d \n",location.x,location.y,location.heading, Localizer_getLiftHeight());
+	printf("Waypoiny Average: X is %d, Y is %d, Theta is %f, LiftHeight is %d \n",waypoints[currentWaypoint].x,waypoints[currentWaypoint].y,waypoints[currentWaypoint].heading, waypoints[currentWaypoint].liftHeight);
 
 
 	if (fabsf(rotationNeeded) > ROTATION_LEEWAY) {
@@ -77,7 +80,7 @@ void driver(void*ignore) {
 		completed = false;
 	}
 	else if(fabsf(location.heading - waypoints[currentWaypoint].heading)>HEADING_LEEWAY){
-		setRotation(location.heading - waypoints[currentWaypoint].heading,TURN_SPEED);
+		setRotation(-(location.heading - waypoints[currentWaypoint].heading),TURN_SPEED);
 	}
 
 	else if (abs(Localizer_getLiftHeight() - waypoints[currentWaypoint].liftHeight) > LIFT_HEIGHT_LEEWAY) {
@@ -92,7 +95,7 @@ void driver(void*ignore) {
 	if (completed) {
 		currentWaypoint++;
 	}
-	delay(50); }
+	delay(100); }
 }
 
 float calculateRotation(struct Particle * currentLocation, struct waypoint * goalLocation) {
