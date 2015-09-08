@@ -49,8 +49,8 @@ Gyro gyro;
  * configure a UART port (usartOpen()) but cannot set up an LCD (lcdInit()).
  */
 void initializeIO() {
-	digitalWrite(CLAW_SOL_PIN, LOW);
-	pinMode(CLAW_SOL_PIN,OUTPUT);
+	/*digitalWrite(CLAW_SOL_PIN, LOW);
+	pinMode(CLAW_SOL_PIN,OUTPUT);*/
 }
 
 /*
@@ -69,9 +69,10 @@ void initializeIO() {
 void initialize() {
 
 	//initialize sensors
-	leftSonar = ultrasonicInit(LEFT_SONAR_PORT,LEFT_SONAR_PORT+1);
+	/*leftSonar = ultrasonicInit(LEFT_SONAR_PORT,LEFT_SONAR_PORT+1);
 	rightSonar = ultrasonicInit(RIGHT_SONAR_PORT,RIGHT_SONAR_PORT+1);
     liftEncoder = encoderInit(LIFT_ENCODER_TOP, LIFT_ENCODER_BOTTOM, false);
 	gyro = gyroInit(GYRO_PORT,0);
-	int encoder_count = imeInitializeAll();
+	int encoder_count = imeInitializeAll();*/
+
 }

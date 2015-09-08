@@ -55,7 +55,6 @@
 
 void operatorControl() {
 
-	//pinMode(1,OUTPUT);
 	while (1) {
 
 		//Drive Motors Control
@@ -82,7 +81,7 @@ void operatorControl() {
 		}
 
 
-		delay(50);
+		delay(30);
 	}
 }
 

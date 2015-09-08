@@ -27,10 +27,7 @@ struct waypoint waypoints[NUM_WAYPOINTS] = {
 		//TODO: record different waypoints on field
 		{.x = 40, .y = 0, .heading = 0.0f, .liftHeight = 20, .clawState = 1}//,
 		//{.x = 0, .y = 0, .heading = 6.28f, .liftHeight = 100, .clawState = 0},
-		//{.x = 0, .y = 1000, .heading = 6.28f, .liftHeight = 10, .clawState = 1},
-		//{.x = 0, .y = 1000, .heading = 6.28f, .liftHeight = 10, .clawState = 1},
-		//{.x = 0, .y = 1000, .heading = 6.28f, .liftHeight = 10, .clawState = 1},
-		//{.x = 0, .y = 1000, .heading = 6.28f, .liftHeight = 10, .clawState = 1}
+
 
 };
 int currentWaypoint = 0;
@@ -104,25 +101,6 @@ float calculateRotation(struct Particle * currentLocation, struct waypoint * goa
 	return (PI / 2 - atan2(dY, dX) - currentLocation->heading);
 }
 
-void setLift(int speed) {
-	motorSet(LEFT_LIFT_MOTOR_1_PORT,  1 * speed);
-	motorSet(LEFT_LIFT_MOTOR_2_PORT, -1 * speed);
-	motorSet(LEFT_LIFT_MOTOR_3_PORT,  1 * speed);
-	motorSet(RIGHT_LIFT_MOTOR_1_PORT,-1 * speed);
-	motorSet(RIGHT_LIFT_MOTOR_2_PORT, 1 * speed);
-	motorSet(RIGHT_LIFT_MOTOR_3_PORT,-1 * speed);
-}
-
-void setClaw(int state) {
-	//opened
-	if (state == 1) {
-		digitalWrite(CLAW_SOL_PIN,HIGH);
-	}
-	//closed
-	if (state==0) {
-		digitalWrite(CLAW_SOL_PIN,LOW);
-	}
-}
 
 void setMovement(int speed) {
 	setDriveMotors(speed, speed);
