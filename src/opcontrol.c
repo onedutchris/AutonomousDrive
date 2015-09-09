@@ -58,27 +58,58 @@ void operatorControl() {
 	while (1) {
 
 		//Drive Motors Control
-		motorSet(RIGHT_MOTOR_1_PORT,(-joystickGetAnalog(1, 3) - joystickGetAnalog(1, 4)) );
-		motorSet(RIGHT_MOTOR_2_PORT,(-joystickGetAnalog(1, 3) - joystickGetAnalog(1, 4)) );
-		motorSet(LEFT_MOTOR_1_PORT,-(-joystickGetAnalog(1, 3) + joystickGetAnalog(1, 4)) );
-		motorSet(LEFT_MOTOR_2_PORT,-(-joystickGetAnalog(1, 3) + joystickGetAnalog(1, 4)) );
+		motorSet(FRONT_RIGHT_DRIVE_MOTOR_PORT,(joystickGetAnalog(1, 3) - joystickGetAnalog(1, 4)) - joystickGetAnalog(1, 4));
+		motorSet(FRONT_LEFT_DRIVE_MOTOR_PORT,(joystickGetAnalog(1, 3) + joystickGetAnalog(1, 4)) + joystickGetAnalog(1, 4));
+		motorSet(BACK_RIGHT_DRIVE_MOTOR_PORT,(joystickGetAnalog(1, 3) + joystickGetAnalog(1, 4)) - joystickGetAnalog(1, 4));
+		motorSet(BACK_LEFT_DRIVE_MOTOR_PORT, (joystickGetAnalog(1, 3) - joystickGetAnalog(1, 4)) + joystickGetAnalog(1, 4));
 
-		//Lift Motors Control
-		int liftSpeed = joystickGetAnalog(1,2);
-		motorSet(LEFT_LIFT_MOTOR_1_PORT,  1 * liftSpeed);
-		motorSet(LEFT_LIFT_MOTOR_2_PORT, -1 * liftSpeed);
-		motorSet(LEFT_LIFT_MOTOR_3_PORT,  1 * liftSpeed);
-		motorSet(RIGHT_LIFT_MOTOR_1_PORT,-1 * liftSpeed);
-		motorSet(RIGHT_LIFT_MOTOR_2_PORT, 1 * liftSpeed);
-		motorSet(RIGHT_LIFT_MOTOR_3_PORT,-1 * liftSpeed);
 
-		//Claw Control
-		if (joystickGetDigital(1, 6, 'u') == 1) {
+		//TODO: Add "else" clauses for all
+		if(joystickGetDigital(1, 6, 'u') == 1) {
+			motorSet(TOP_LIFT_MOTOR_PORT,128);
+			motorSet(BOT_LIFT_MOTOR_PORT,128);
+		}
+
+		else {
+			motorSet(TOP_LIFT_MOTOR_PORT,0);
+			motorSet(BOT_LIFT_MOTOR_PORT,0);
+		}
+
+
+		if(joystickGetDigital(1, 8, 'd') == 1) {
+			motorSet(LEFT_FLY_MOTOR_PORT,128);
+			motorSet(RIGHT_FLY_MOTOR_PORT,128);
+		}
+
+		else {
+			motorSet(LEFT_FLY_MOTOR_PORT,0);
+			motorSet(RIGHT_FLY_MOTOR_PORT,0);
+			}
+
+		if(joystickGetDigital(1, 5, 'd') == 1) {
+			motorSet(INTAKE_MOTOR_PORT,128);
+		}
+
+		else {
+			motorSet(INTAKE_MOTOR_PORT,0);
+		}
+
+		if(joystickGetDigital(1, 5, 'u') == 1) {
+			digitalWrite(INTAKE_SOLENOID_PORT,HIGH);
+		}
+
+		else {
+			digitalWrite(INTAKE_SOLENOID_PORT,LOW);
+		}
+
+
+		//Intake Lift Control
+		/*if (joystickGetDigital(1, 6, 'u') == 1) {
 			digitalWrite(CLAW_SOL_PIN,HIGH);
 		}
 		else {
 			digitalWrite(CLAW_SOL_PIN,LOW);
-		}
+		}*/
 
 
 		delay(30);

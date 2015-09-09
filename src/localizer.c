@@ -93,9 +93,9 @@ void localizer(void* ignore) {
 	printf("Started Localizer Task");
 	initialize_filter();
 
-	encoderReset(liftEncoder);
-	imeReset(LEFT_MOTOR_IME);
-	imeReset(RIGHT_MOTOR_IME);
+	//encoderReset(liftEncoder);
+	//imeReset(LEFT_MOTOR_IME);
+	//imeReset(RIGHT_MOTOR_IME);
 
 	while (1) {
 
@@ -134,16 +134,16 @@ void update_state(int liftEncoderValue) {
 
 struct SensorData sense() {
 	struct SensorData values;
-	imeGet(LEFT_MOTOR_IME, &values.leftEncoder);
-	imeGet(RIGHT_MOTOR_IME, &values.rightEncoder);
+	//imeGet(LEFT_MOTOR_IME, &values.leftEncoder);
+	//imeGet(RIGHT_MOTOR_IME, &values.rightEncoder);
 	values.gyro = -1 * gyroGet(gyro) * DEGREES_TO_RADIANS;
 	values.leftSonar = ultrasonicGet(leftSonar);
 	values.rightSonar = ultrasonicGet(rightSonar);
 	values.liftEncoder = encoderGet(liftEncoder);
 
 	encoderReset(liftEncoder);
-	imeReset(LEFT_MOTOR_IME);
-	imeReset(RIGHT_MOTOR_IME);
+	//imeReset(LEFT_MOTOR_IME);
+	//imeReset(RIGHT_MOTOR_IME);
 	gyroReset(gyro);
 	return values;
 }

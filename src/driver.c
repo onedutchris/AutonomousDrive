@@ -60,7 +60,7 @@ void driver(void*ignore) {
 
 	setRotation(0,0);
 	setMovement(0);
-	setLift(0);
+	//setLift(0);
 
 	bool completed = true;
 
@@ -81,11 +81,11 @@ void driver(void*ignore) {
 	}
 
 	else if (abs(Localizer_getLiftHeight() - waypoints[currentWaypoint].liftHeight) > LIFT_HEIGHT_LEEWAY) {
-		setLift(LIFT_SPEED);
+		//setLift(LIFT_SPEED);
 		completed = false;
 	}
 	else {
-		setClaw(waypoints[currentWaypoint].clawState);
+		//setClaw(waypoints[currentWaypoint].clawState);
 		completed = true;
 	}
 
@@ -115,9 +115,9 @@ void setRotation(float rotationNeeded, int speed) {
 
 void setDriveMotors(int leftSide, int rightSide) {
 //TODO: PID Control
-	motorSet(LEFT_MOTOR_1_PORT, leftSide);
+	/*motorSet(LEFT_MOTOR_1_PORT, leftSide);
 	motorSet(LEFT_MOTOR_2_PORT, leftSide);
 
 	motorSet(RIGHT_MOTOR_1_PORT, -rightSide);
-	motorSet(RIGHT_MOTOR_2_PORT, -rightSide);
+	motorSet(RIGHT_MOTOR_2_PORT, -rightSide);*/
 }

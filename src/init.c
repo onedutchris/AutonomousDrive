@@ -49,8 +49,9 @@ Gyro gyro;
  * configure a UART port (usartOpen()) but cannot set up an LCD (lcdInit()).
  */
 void initializeIO() {
-	/*digitalWrite(CLAW_SOL_PIN, LOW);
-	pinMode(CLAW_SOL_PIN,OUTPUT);*/
+
+	digitalWrite(INTAKE_SOLENOID_PORT, LOW);
+	pinMode(INTAKE_SOLENOID_PORT,OUTPUT);
 }
 
 /*
