@@ -221,4 +221,4 @@ int Localizer_getLiftHeight() {
 	return liftHeight;
 }
 
-#endif /* LOCALIZER_C_ */
+#endif /* LOCALIZER_C_ */ /*to do*/
